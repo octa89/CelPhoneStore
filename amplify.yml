@@ -3,20 +3,14 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Use Node 20 LTS (adjust if your project needs a different version)
         - nvm install 20
         - nvm use 20
-
-        # Clean, deterministic installs
         - npm ci
-
-        # (Optional) Silence Next telemetry in CI
         - npx next telemetry disable
     build:
       commands:
         - npm run build
   artifacts:
-    # Amplify Hosting understands Next.js SSR and will read from .next
     baseDirectory: .next
     files:
       - "**/*"
@@ -24,10 +18,3 @@ frontend:
     paths:
       - node_modules/**/*
       - .next/cache/**/*
-# Optional: preview deploys for PRs (Amplify console controls this as well)
-# previews:
-#   pullrequests:
-#     - do_preview: true
-#       preview_environment_variable:
-#         - name: NEXT_PUBLIC_PREVIEW
-#           value: 'true'
