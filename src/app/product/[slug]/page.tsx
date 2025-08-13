@@ -3,14 +3,19 @@ import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import AddToCartClient from "./purchase";
 
-type Props = { params: { slug: string } };
+type Params = { slug: string };
 
-export async function generateStaticParams() {
+export function generateStaticParams(): Params[] {
   return getAllProducts().map((p) => ({ slug: p.slug }));
 }
 
-export default function ProductPage({ params }: Props) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<Params>; // <-- Next 15: Promise
+}) {
+  const { slug } = await params; // <-- await
+  const product = getProductBySlug(slug);
   if (!product) return notFound();
 
   return (
@@ -47,7 +52,6 @@ export default function ProductPage({ params }: Props) {
           <AddToCartClient product={product} />
         </div>
 
-        {/* JSON-LD for SEO */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

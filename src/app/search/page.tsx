@@ -1,12 +1,14 @@
 import { searchProducts } from "@/lib/products";
 import ProductGrid from "@/components/product-grid";
 
-export default function SearchPage({
+type Search = { q?: string };
+
+export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<Search>; // <-- Promise
 }) {
-  const q = searchParams.q?.toString() || "";
+  const { q = "" } = await searchParams; // <-- await
   const results = q ? searchProducts(q) : [];
   return (
     <div>

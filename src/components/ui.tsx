@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import type { HTMLMotionProps } from "framer-motion";
 import { useRef, useState } from "react";
 
 /** Magnetic CTA button */
@@ -8,9 +9,7 @@ export function MagneticButton({
   children,
   className,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: React.ReactNode;
-}) {
+}: HTMLMotionProps<"button"> & { children: React.ReactNode }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [hover, setHover] = useState(false);
   const mx = useMotionValue(0),
@@ -50,9 +49,10 @@ export function MagneticButton({
   );
 }
 
+/** Small circular count badge used in the navbar cart */
 export function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="ml-2 rounded-full bg-white/10 px-2 py-[2px] text-xs">
+    <span className="ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-white/10 px-2 py-[2px] text-xs">
       {children}
     </span>
   );
