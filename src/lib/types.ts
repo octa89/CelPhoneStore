@@ -8,6 +8,6 @@ export type Product = {
   tags: string[];
   specs?: Record<string, string | number>;
   featured?: boolean;
-  category: "iphone" | "accessory" | "audio" | "tablet" | "watch";
+  category: "iphone" | "android" | "accessory" | "audio" | "tablet" | "watch";
   description: string;
 };

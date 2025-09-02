@@ -3,12 +3,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/store/use-cart";
 import { Badge } from "./ui";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const router = useRouter();
   const { totalCount, toggleCart } = useCart();
   const [q, setQ] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-black/50 backdrop-blur">
@@ -39,7 +44,7 @@ export default function Navbar() {
           </Link>
           <button onClick={toggleCart} className="relative">
             🛒
-            <Badge>{totalCount()}</Badge>
+            <Badge>{isMounted ? totalCount() : 0}</Badge>
           </button>
         </div>
       </div>
