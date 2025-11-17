@@ -12,11 +12,11 @@ export default async function SearchPage({
   const results = q ? searchProducts(q) : [];
   return (
     <div>
-      <h1 className="text-xl font-semibold mb-4">Search {q && `“${q}”`}</h1>
+      <h1 className="text-xl font-semibold mb-4">Buscar {q && `"${q}"`}</h1>
       {q ? (
         <ProductGrid items={results} />
       ) : (
-        <p>Type a search term in the navbar.</p>
+        <p>Escribe un término de búsqueda en la barra superior.</p>
       )}
     </div>
   );

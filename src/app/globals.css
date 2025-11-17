@@ -11,37 +11,102 @@
     @apply antialiased;
   }
   body {
-    @apply bg-neutral-950 text-neutral-100;
+    @apply bg-tecno-bg text-text-main;
+  }
+}
+
+@layer components {
+  /* Primary Button - Main CTA */
+  .btn-primary {
+    @apply bg-gradient-primary text-white font-semibold px-7 py-3 rounded-full;
+    @apply shadow-lg hover:brightness-105 hover:-translate-y-0.5;
+    @apply transition-all duration-150 ease-out;
+    @apply active:translate-y-0 active:brightness-95;
+  }
+
+  /* Secondary Button - Outline Ghost */
+  .btn-secondary {
+    @apply bg-tecno-bg/85 text-tecno-cyan border border-tecno-cyan;
+    @apply px-7 py-3 rounded-full font-medium;
+    @apply hover:border-tecno-mint hover:text-tecno-mint;
+    @apply transition-all duration-150;
+  }
+  .btn-secondary:hover {
+    background-color: rgba(46, 197, 255, 0.12);
+  }
+
+  /* Lightning Button - Special Actions */
+  .btn-lightning {
+    @apply bg-tecno-bolt text-tecno-bg font-bold px-6 py-2.5 rounded-xl;
+    @apply shadow-bolt tracking-wide;
+    @apply hover:brightness-105 hover:-translate-y-0.5;
+    @apply transition-all duration-150;
+  }
+
+  /* Disabled State */
+  .btn-disabled {
+    @apply opacity-45 cursor-not-allowed shadow-none;
+    @apply hover:translate-y-0 hover:brightness-100;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply backdrop-blur-md border;
+    background-color: rgba(31, 28, 120, 0.4);
+    border-color: rgba(46, 197, 255, 0.2);
   }
+
+  .glass-card {
+    @apply bg-gradient-card backdrop-blur-sm border border-border-subtle;
+    @apply shadow-lg hover:shadow-glow transition-shadow duration-300;
+  }
+
   .ringed {
-    @apply ring-1 ring-white/10;
+    @apply ring-1;
+    --tw-ring-color: rgba(46, 197, 255, 0.3);
+  }
+
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-tecno-mint to-tecno-lightBlue bg-clip-text text-transparent;
   }
 }
 
-/* Animated gradient mesh background */
+/* Enhanced gradient mesh background with logo colors */
 .gradient-mesh {
   position: absolute;
   inset: -20%;
-  filter: blur(80px);
-  background: radial-gradient(40% 30% at 20% 20%, #00f5d4 0%, transparent 60%),
-    radial-gradient(30% 40% at 80% 0%, #00bbf9 0%, transparent 60%),
-    radial-gradient(30% 30% at 50% 100%, #f15bb5 0%, transparent 60%),
-    radial-gradient(20% 20% at 10% 90%, #fee440 0%, transparent 70%);
-  animation: float 18s ease-in-out infinite alternate;
-  opacity: 0.35;
+  filter: blur(100px);
+  background:
+    radial-gradient(40% 30% at 20% 20%, #2EC5FF 0%, transparent 60%),
+    radial-gradient(30% 40% at 80% 0%, #2434FF 0%, transparent 60%),
+    radial-gradient(30% 30% at 50% 100%, #1F1C78 0%, transparent 60%),
+    radial-gradient(20% 20% at 10% 90%, #FFD53D 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite alternate;
+  opacity: 0.25;
   pointer-events: none;
 }
+
 @keyframes float {
   from {
     transform: translateY(-2%) scale(1.05) rotate(0deg);
   }
   to {
     transform: translateY(2%) scale(1.08) rotate(3deg);
+  }
+}
+
+/* Glow animation for interactive elements */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(46, 197, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(46, 197, 255, 0.6);
   }
 }

@@ -5,7 +5,14 @@
       "Bash(npm run build:*)",
       "Bash(npm install)",
       "Bash(npm run dev:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "WebSearch",
+      "Bash(npm install:*)",
+      "WebFetch(domain:www.honor.com)",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

@@ -50,9 +50,18 @@ export function MagneticButton({
 }
 
 /** Small circular count badge used in the navbar cart */
-export function Badge({ children }: { children: React.ReactNode }) {
+export function Badge({
+  children,
+  className
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <span className="ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-white/10 px-2 py-[2px] text-xs">
+    <span className={cn(
+      "ml-2 inline-flex min-w-5 items-center justify-center rounded-full bg-white/10 px-2 py-[2px] text-xs",
+      className
+    )}>
       {children}
     </span>
   );

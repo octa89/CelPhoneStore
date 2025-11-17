@@ -2,6 +2,7 @@ import { getAllProducts, getProductBySlug } from "@/lib/products";
 import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import AddToCartClient from "./purchase";
+import Image from "next/image";
 
 type Params = { slug: string };
 
@@ -22,11 +23,14 @@ export default async function ProductPage({
     <div className="grid gap-8 lg:grid-cols-2">
       <div className="space-y-3">
         {product.images.map((src, i) => (
-          <img
+          <Image
             key={i}
             src={src}
-            alt={product.name}
+            alt={`${product.name} - Image ${i + 1}`}
+            width={800}
+            height={800}
             className="w-full rounded-xl ringed"
+            priority={i === 0}
           />
         ))}
       </div>

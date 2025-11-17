@@ -15,7 +15,7 @@ export default function AddToCartClient({ product }: { product: Product }) {
         openCart();
       }}
     >
-      Add to cart
+      Agregar al carrito
     </motion.button>
   );
 }

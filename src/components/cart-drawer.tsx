@@ -3,6 +3,7 @@ import { useCart } from "@/store/use-cart";
 import { formatCurrency } from "@/lib/utils";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -12,23 +13,26 @@ export default function CartDrawer() {
   const { open, closeCart, items, setQty, remove, subtotalCents, clear } =
     useCart();
   const [isMounted, setIsMounted] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
+  // Prevent body scroll when cart is open AND scroll cart content to top
   useEffect(() => {
     if (open) {
-      setScrollY(window.scrollY);
-      
-      const handleScroll = () => {
-        setScrollY(window.scrollY);
-      };
-      
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = 'hidden';
+      // Reset scroll position to top when cart opens
+      const cartPanel = document.getElementById('cart-drawer-panel');
+      if (cartPanel) {
+        cartPanel.scrollTop = 0;
+      }
+    } else {
+      document.body.style.overflow = 'unset';
     }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [open]);
   
   if (!isMounted) return null;
@@ -82,10 +86,7 @@ export default function CartDrawer() {
     }
   }
 
-  const itemCount = Object.values(items).length;
-  const dynamicHeight = Math.max(300, Math.min(600, 120 + itemCount * 100 + 100)); // min 300px, max 600px
-
-  return (
+  const cartContent = (
     <>
       {/* backdrop */}
       <div
@@ -94,21 +95,23 @@ export default function CartDrawer() {
         }`}
         onClick={closeCart}
         aria-hidden={!open}
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
       />
       {/* panel */}
       <aside
-        className={`absolute right-4 w-full sm:w-[420px] bg-neutral-950 border border-white/10 shadow-2xl rounded-xl
-                    transition-all duration-300 ease-in-out ${
-                      open ? "transform translate-x-0 scale-100" : "transform translate-x-full scale-95"
-                    }`}
-        style={{ 
-          top: `${scrollY + 100}px`,
-          transform: open 
-            ? 'translateX(0) scale(1)' 
-            : 'translateX(100%) scale(0.95)',
-          height: `${dynamicHeight}px`,
-          zIndex: 70
+        id="cart-drawer-panel"
+        className={`w-full sm:w-[420px] max-w-full bg-tecno-bgDark border-l border-tecno-cyan/30 shadow-glow-lg z-[70] lg:overflow-y-auto transition-transform duration-300 ease-out ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          height: '100vh',
+          bottom: 0,
+          transform: open ? 'translateX(0)' : 'translateX(100%)'
         }}
+        aria-hidden={!open}
       >
         <div className="flex flex-col h-full">
           <div className="p-4 flex items-center justify-between border-b border-white/10 flex-shrink-0">
@@ -180,4 +183,6 @@ export default function CartDrawer() {
       </aside>
     </>
   );
+
+  return createPortal(cartContent, document.body);
 }

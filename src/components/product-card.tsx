@@ -5,6 +5,7 @@ import type { Product } from "@/lib/types";
 import { useCart } from "@/store/use-cart";
 import confetti from "canvas-confetti";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ProductCard({ p }: { p: Product }) {
   const mx = useMotionValue(0),
@@ -21,12 +22,17 @@ export default function ProductCard({ p }: { p: Product }) {
 
   function addToCart() {
     add(p, 1);
-    confetti({ particleCount: 60, spread: 55, origin: { y: 0.8 } });
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.8 },
+      colors: ['#2EC5FF', '#2434FF', '#FFD53D', '#BCEFE4'],
+    });
   }
 
   return (
     <motion.article
-      className="group glass ringed rounded-2xl overflow-hidden"
+      className="group glass-card rounded-2xl overflow-hidden relative"
       onMouseMove={(e) => {
         const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
         mx.set(e.clientX - (r.left + r.width / 2));
@@ -37,46 +43,71 @@ export default function ProductCard({ p }: { p: Product }) {
         my.set(0);
       }}
       style={{ rotateX: rx, rotateY: ry }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
     >
-      <Link href={`/product/${p.slug}`}>
-        <img
+      {/* Featured Badge */}
+      {p.featured && (
+        <div className="absolute top-3 left-3 z-10 bg-tecno-bolt text-tecno-bg px-3 py-1 rounded-full text-xs font-bold shadow-bolt">
+          ⚡ DESTACADO
+        </div>
+      )}
+
+      {/* Product Image */}
+      <Link href={`/product/${p.slug}`} className="block relative overflow-hidden">
+        <Image
           src={p.images[0]}
           alt={p.name}
-          className="h-56 w-full object-cover"
+          width={400}
+          height={224}
+          className="h-56 w-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-tecno-bg/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </Link>
-      <div className="p-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold">{p.name}</h3>
-          <span className="text-fuchsia-300">
+
+      {/* Content */}
+      <div className="p-5">
+        {/* Brand */}
+        <p className="text-xs text-text-muted uppercase tracking-wider mb-1">{p.brand}</p>
+
+        {/* Name & Price */}
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 className="font-semibold text-text-main line-clamp-2 flex-1">{p.name}</h3>
+          <span className="text-tecno-cyan font-bold text-lg whitespace-nowrap">
             {formatCurrency(p.priceCents)}
           </span>
         </div>
-        <p className="mt-1 text-sm text-neutral-300 line-clamp-2">
+
+        {/* Description */}
+        <p className="text-sm text-text-muted line-clamp-2 mb-3">
           {p.description}
         </p>
-        <div className="mt-3 flex gap-2">
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {p.tags.slice(0, 3).map((t) => (
             <span
               key={t}
-              className="text-xs rounded-full bg-white/10 px-2 py-[2px]"
+              className="text-xs rounded-full bg-tecno-primary/20 text-tecno-mint px-2.5 py-0.5 border border-tecno-cyan/30"
             >
               {t}
             </span>
           ))}
         </div>
-        <div className="mt-4 flex gap-2">
+
+        {/* Actions */}
+        <div className="flex gap-2">
           <button
             onClick={addToCart}
-            className="glass ringed rounded-lg px-3 py-2 text-sm"
+            className="btn-primary flex-1 text-sm py-2.5"
           >
-            Add to cart
+            🛒 Agregar
           </button>
           <Link
             href={`/product/${p.slug}`}
-            className="text-sm underline underline-offset-4"
+            className="btn-secondary px-4 py-2.5 text-sm"
           >
-            Details
+            Ver
           </Link>
         </div>
       </div>
