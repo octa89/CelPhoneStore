@@ -1,4 +1,7 @@
+"use client";
+import { useState } from "react";
 import ProductCard from "./product-card";
+import ProductQuickView from "./product-quick-view";
 import type { Product } from "@/lib/types";
 
 export default function ProductGrid({
@@ -8,6 +11,13 @@ export default function ProductGrid({
   items: Product[];
   title?: string;
 }) {
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+
+  const handleQuickView = (product: Product) => {
+    console.log("Quick view triggered for:", product.name);
+    setQuickViewProduct(product);
+  };
+
   return (
     <section id="productos" className="section-padding scroll-mt-20">
       {title && (
@@ -25,7 +35,11 @@ export default function ProductGrid({
         {items
           .filter((p) => p.available !== false) // Only show available products
           .map((p) => (
-            <ProductCard key={p.id} p={p} />
+            <ProductCard
+              key={p.id}
+              p={p}
+              onQuickView={() => handleQuickView(p)}
+            />
           ))}
       </div>
 
@@ -36,6 +50,12 @@ export default function ProductGrid({
           </p>
         </div>
       )}
+
+      {/* Quick View Modal - Rendered at grid level, not inside cards */}
+      <ProductQuickView
+        product={quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </section>
   );
 }

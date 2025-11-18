@@ -7,7 +7,7 @@ import confetti from "canvas-confetti";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProductCard({ p }: { p: Product }) {
+export default function ProductCard({ p, onQuickView }: { p: Product; onQuickView?: () => void }) {
   const { add } = useCart();
 
   function addToCart() {
@@ -49,10 +49,13 @@ export default function ProductCard({ p }: { p: Product }) {
         {/* Brand */}
         <p className="text-sm text-honor-text-muted uppercase tracking-wide mb-2">{p.brand}</p>
 
-        {/* Name */}
-        <h3 className="text-xl font-semibold text-honor-text-primary mb-2 line-clamp-2 min-h-[3.5rem]">
-          {p.name}
-        </h3>
+        {/* Name - Clickable for Quick View */}
+        <button
+          onClick={onQuickView}
+          className="text-xl font-semibold text-honor-text-primary mb-2 line-clamp-2 min-h-[3.5rem] text-left hover:text-honor-primary transition-colors w-full"
+        >
+          {p.name} 👁️
+        </button>
 
         {/* Description */}
         <p className="text-sm text-black line-clamp-2 mb-4 leading-relaxed">
