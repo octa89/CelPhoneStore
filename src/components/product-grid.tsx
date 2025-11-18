@@ -9,21 +9,31 @@ export default function ProductGrid({
   title?: string;
 }) {
   return (
-    <section id="productos" className="scroll-mt-20">
+    <section id="productos" className="section-padding scroll-mt-20">
       {title && (
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gradient mb-2">{title}</h2>
-          <div className="h-1 w-20 bg-gradient-primary rounded-full" />
+        <div className="mb-12 text-center">
+          <h2 className="text-4xl md:text-5xl font-semibold text-honor-text-primary mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-honor-text-secondary max-w-2xl mx-auto">
+            Descubre nuestra selección premium de smartphones y accesorios
+          </p>
         </div>
       )}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {items.map((p) => (
-          <ProductCard key={p.id} p={p} />
-        ))}
+
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in">
+        {items
+          .filter((p) => p.available !== false) // Only show available products
+          .map((p) => (
+            <ProductCard key={p.id} p={p} />
+          ))}
       </div>
+
       {items.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-text-muted text-lg">No se encontraron productos.</p>
+        <div className="text-center py-20">
+          <p className="text-honor-text-secondary text-lg">
+            No se encontraron productos que coincidan con tu búsqueda.
+          </p>
         </div>
       )}
     </section>

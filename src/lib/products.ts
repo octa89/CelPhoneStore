@@ -49,7 +49,11 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1706412703794-d944cd3625b3?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ],
     tags: ["Tensor G3", "Magic Eraser", "Android Puro"],
-    specs: { Almacenamiento: "256 GB", Chip: "Google Tensor G3", Pantalla: '6.7"' },
+    specs: {
+      Almacenamiento: "256 GB",
+      Chip: "Google Tensor G3",
+      Pantalla: '6.7"',
+    },
     featured: true,
     category: "android",
     description: "Fotografía con IA y la experiencia Android más pura.",
@@ -64,7 +68,11 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1730818877199-8c15b5638fbe?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ],
     tags: ["Tensor G3", "Filtrado de Llamadas", "Traducción en Vivo"],
-    specs: { Almacenamiento: "128 GB", Chip: "Google Tensor G3", Pantalla: '6.2"' },
+    specs: {
+      Almacenamiento: "128 GB",
+      Chip: "Google Tensor G3",
+      Pantalla: '6.2"',
+    },
     category: "android",
     description: "Funciones inteligentes con IA de Google en diseño compacto.",
   },
@@ -194,9 +202,7 @@ export const products: Product[] = [
     name: "Redmi Note 13 Pro+ 256GB",
     brand: "Xiaomi",
     priceCents: 44900,
-    images: [
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
+    images: ["https://m.media-amazon.com/images/I/61EtI-x8JML.jpg"],
     tags: ["Dimensity 7200", "Cámara 200MP", "Carga 120W"],
     specs: {
       Almacenamiento: "256 GB",
@@ -215,7 +221,7 @@ export const products: Product[] = [
     brand: "Xiaomi",
     priceCents: 49900,
     images: [
-      "https://images.unsplash.com/photo-1592286927505-b5c8e4e896fe?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1568171284620-57dc85d9f210?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ],
     tags: ["Snapdragon 8s Gen 3", "Gaming", "Carga 90W"],
     specs: {
@@ -269,7 +275,7 @@ export const products: Product[] = [
     brand: "Samsung",
     priceCents: 79900,
     images: [
-      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1493661969828-411ef6a6624d?q=80&w=1592&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ],
     tags: ["Snapdragon 8 Gen 2", "AMOLED", "Water Resistant"],
     specs: {
@@ -297,12 +303,18 @@ export const products: Product[] = [
   },
 ];
 
+// For server-side use (admin), import from data-manager
+// For client-side use, these functions use the static products array as fallback
+// Frontend pages should use API routes to get latest data
+
 export function getAllProducts() {
   return products;
 }
+
 export function getProductBySlug(slug: string) {
   return products.find((p) => p.slug === slug) || null;
 }
+
 export function searchProducts(q: string) {
   const term = q.toLowerCase();
   return products.filter(

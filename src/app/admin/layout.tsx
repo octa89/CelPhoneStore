@@ -18,7 +18,9 @@ export default function AdminLayout({
     { href: "/admin", label: "Dashboard", icon: "📊" },
     { href: "/admin/products", label: "Productos", icon: "📱" },
     { href: "/admin/products/new", label: "Nuevo Producto", icon: "➕" },
-    { href: "/admin/orders", label: "Pedidos", icon: "🛒" },
+    { href: "/admin/products/order", label: "Orden de Productos", icon: "🔢" },
+    { href: "/admin/carousel", label: "Carrusel Hero", icon: "🎠" },
+    { href: "/admin/categories", label: "Categorías", icon: "📁" },
   ];
 
   return (
@@ -35,7 +37,13 @@ export default function AdminLayout({
             <Link href="/" className="text-sm text-tecno-cyan hover:text-tecno-mint transition-colors">
               Ver Tienda →
             </Link>
-            <button className="text-sm text-text-muted hover:text-red-400 transition-colors">
+            <button
+              onClick={async () => {
+                await fetch("/api/admin/logout", { method: "POST" });
+                window.location.href = "/admin/login";
+              }}
+              className="text-sm text-text-muted hover:text-red-400 transition-colors"
+            >
               Cerrar Sesión
             </button>
           </div>

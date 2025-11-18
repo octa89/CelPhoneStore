@@ -26,41 +26,41 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <div className="glass-card rounded-2xl p-6">
+        <Link href="/admin/products" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl">📱</span>
+            <span className="text-3xl group-hover:scale-110 transition-transform">📱</span>
             <span className="text-xs text-tecno-mint bg-tecno-mint/10 px-2 py-1 rounded-full">Total</span>
           </div>
           <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.totalProducts}</p>
           <p className="text-sm text-text-muted">Productos</p>
-        </div>
+        </Link>
 
-        <div className="glass-card rounded-2xl p-6">
+        <Link href="/admin/orders" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl">🛒</span>
+            <span className="text-3xl group-hover:scale-110 transition-transform">🛒</span>
             <span className="text-xs text-tecno-bolt bg-tecno-bolt/10 px-2 py-1 rounded-full">Hoy</span>
           </div>
           <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.totalOrders}</p>
           <p className="text-sm text-text-muted">Pedidos</p>
-        </div>
+        </Link>
 
-        <div className="glass-card rounded-2xl p-6">
+        <Link href="/admin/orders?filter=pending" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl">⏳</span>
+            <span className="text-3xl group-hover:scale-110 transition-transform">⏳</span>
             <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full">Pendientes</span>
           </div>
           <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.pendingOrders}</p>
           <p className="text-sm text-text-muted">Por Procesar</p>
-        </div>
+        </Link>
 
-        <div className="glass-card rounded-2xl p-6">
+        <Link href="/admin/orders?filter=revenue" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl">💰</span>
+            <span className="text-3xl group-hover:scale-110 transition-transform">💰</span>
             <span className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">Total</span>
           </div>
           <p className="text-3xl font-bold text-tecno-cyan mb-1">${stats.revenue}</p>
           <p className="text-sm text-text-muted">Ingresos</p>
-        </div>
+        </Link>
       </div>
 
       {/* Quick Actions */}

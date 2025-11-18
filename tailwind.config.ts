@@ -10,47 +10,88 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // TecnoExpress Brand Colors (from logo)
-        tecno: {
-          bg: '#02010A',           // Deep navy background
-          bgDark: '#1F1C78',       // Dark electric blue
-          primary: '#2434FF',      // Bright royal blue
-          cyan: '#2EC5FF',         // Cyan outline
-          mint: '#BCEFE4',         // Mint-light logo text
-          lightBlue: '#9FB4FF',    // Soft light blue text
-          bolt: '#FFD53D',         // Bolt yellow (updated for punch)
+        // Honor Global Official Design System
+        honor: {
+          // Backgrounds
+          bg: '#FFFFFF',
+          'bg-light': '#F5F5F7',
+          'bg-dark': '#F8F8F8',
+
+          // Text colors
+          'text-primary': '#1A1A1A',
+          'text-secondary': '#6A6A6A',
+          'text-muted': '#999999',
+
+          // Brand colors
+          primary: '#1A1F71',      // Deep blue
+          accent: '#E10071',       // Magenta accent
+
+          // Borders & dividers
+          border: '#E5E5E5',
+          divider: '#EBEBEB',
         },
-        // Semantic colors
+        // Maintain backward compatibility
+        tecno: {
+          bg: '#FFFFFF',
+          bgDark: '#F5F5F7',
+          primary: '#1A1F71',
+          cyan: '#1A1F71',
+          mint: '#6A6A6A',
+          lightBlue: '#999999',
+          bolt: '#E10071',
+        },
         text: {
-          main: '#F5F7FF',         // Main text
-          muted: '#9FA8FF',        // Secondary text
+          main: '#1A1A1A',
+          muted: '#6A6A6A',
         },
         border: {
-          subtle: '#262B4F',       // Subtle borders
+          subtle: '#E5E5E5',
         },
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(90deg, #2434FF, #2EC5FF)',
-        'gradient-hero': 'linear-gradient(135deg, #02010A 0%, #2434FF 100%)',
-        'gradient-card': 'linear-gradient(135deg, rgba(31, 28, 120, 0.5) 0%, rgba(36, 52, 255, 0.3) 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #1A1F71 0%, #2A3F91 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #FFFFFF 0%, #F5F5F7 100%)',
+        'gradient-card': 'linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #E10071 0%, #F91091 100%)',
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(46, 197, 255, 0.3)',
-        'glow-lg': '0 0 30px rgba(46, 197, 255, 0.4)',
-        'bolt': '0 0.35rem 1rem rgba(255, 213, 61, 0.45)',
+        'honor': '0 2px 12px rgba(0, 0, 0, 0.06)',
+        'honor-lg': '0 8px 24px rgba(0, 0, 0, 0.08)',
+        'honor-xl': '0 12px 32px rgba(0, 0, 0, 0.12)',
+        'honor-lift': '0 16px 48px rgba(0, 0, 0, 0.15)',
+      },
+      borderRadius: {
+        'honor': '12px',
+        'honor-lg': '16px',
+        'honor-xl': '24px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '100': '25rem',
+        '120': '30rem',
       },
       animation: {
-        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'fade-in': 'fadeIn 0.6s ease-out',
+        'slide-up': 'slideUp 0.6s ease-out',
+        'zoom': 'zoom 0.3s ease-out',
       },
       keyframes: {
-        'pulse-glow': {
-          '0%, 100%': {
-            boxShadow: '0 0 20px rgba(46, 197, 255, 0.3)',
-          },
-          '50%': {
-            boxShadow: '0 0 30px rgba(46, 197, 255, 0.6)',
-          },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        zoom: {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.05)' },
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

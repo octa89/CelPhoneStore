@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -14,11 +16,21 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      // TODO: Implement Amplify Auth signIn
-      console.log("Login attempt:", { email, password: "***" });
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-      // Placeholder for Amplify implementation
-      alert("Autenticación con AWS Amplify será implementada próximamente");
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Error al iniciar sesión");
+        return;
+      }
+
+      router.push("/admin");
+      router.refresh();
     } catch (err) {
       console.error("Login error:", err);
       setError("Error al iniciar sesión. Verifica tus credenciales.");
@@ -54,17 +66,19 @@ export default function AdminLoginPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-text-main mb-2">
-                Correo Electrónico
+              <label htmlFor="username" className="block text-sm font-medium text-text-main mb-2">
+                Usuario
               </label>
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
+                autoComplete="off"
                 className="w-full px-4 py-3 bg-tecno-bg/60 border border-tecno-cyan/30 rounded-lg outline-none focus:border-tecno-cyan focus:ring-2 focus:ring-tecno-cyan/20 transition-all"
-                placeholder="admin@tecnoexpress.com"
+                placeholder="Ingrese su usuario"
               />
             </div>
 
@@ -75,11 +89,13 @@ export default function AdminLoginPage() {
               <input
                 type="password"
                 id="password"
+                name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="new-password"
                 className="w-full px-4 py-3 bg-tecno-bg/60 border border-tecno-cyan/30 rounded-lg outline-none focus:border-tecno-cyan focus:ring-2 focus:ring-tecno-cyan/20 transition-all"
-                placeholder="••••••••"
+                placeholder="Ingrese su contraseña"
               />
             </div>
 

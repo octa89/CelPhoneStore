@@ -2,111 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Honor Global Design System - CSS Variables */
 :root {
+  --background: #FFFFFF;
+  --text-primary: #1A1A1A;
+  --text-muted: #6A6A6A;
+  --primary: #1A1F71;
+  --accent: #E10071;
+  --gray-light: #F5F5F7;
   --radius: 12px;
 }
 
 @layer base {
   html {
-    @apply antialiased;
+    @apply antialiased scroll-smooth;
   }
+
   body {
-    @apply bg-tecno-bg text-text-main;
+    @apply bg-white text-honor-text-primary;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Honor Typography Scale */
+  h1 {
+    @apply text-5xl md:text-6xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl font-medium;
+  }
+
+  p {
+    @apply text-base text-honor-text-secondary leading-relaxed;
   }
 }
 
 @layer components {
-  /* Primary Button - Main CTA */
+  /* Honor Global Button Styles */
   .btn-primary {
-    @apply bg-gradient-primary text-white font-semibold px-7 py-3 rounded-full;
-    @apply shadow-lg hover:brightness-105 hover:-translate-y-0.5;
-    @apply transition-all duration-150 ease-out;
-    @apply active:translate-y-0 active:brightness-95;
+    @apply bg-black text-white font-semibold;
+    @apply hover:bg-gray-900 transition-all duration-200;
+    @apply w-full md:w-auto;
+    border-radius: 28px;
+    padding: 12px 28px;
   }
 
-  /* Secondary Button - Outline Ghost */
   .btn-secondary {
-    @apply bg-tecno-bg/85 text-tecno-cyan border border-tecno-cyan;
-    @apply px-7 py-3 rounded-full font-medium;
-    @apply hover:border-tecno-mint hover:text-tecno-mint;
-    @apply transition-all duration-150;
-  }
-  .btn-secondary:hover {
-    background-color: rgba(46, 197, 255, 0.12);
+    @apply border-2 border-black text-black font-semibold;
+    @apply hover:bg-gray-100 transition-all duration-200;
+    @apply w-full md:w-auto;
+    border-radius: 28px;
+    padding: 12px 28px;
   }
 
-  /* Lightning Button - Special Actions */
-  .btn-lightning {
-    @apply bg-tecno-bolt text-tecno-bg font-bold px-6 py-2.5 rounded-xl;
-    @apply shadow-bolt tracking-wide;
-    @apply hover:brightness-105 hover:-translate-y-0.5;
-    @apply transition-all duration-150;
+  .btn-accent {
+    @apply bg-honor-accent text-white font-semibold;
+    @apply hover:opacity-90 transition-all duration-200;
+    @apply w-full md:w-auto;
+    border-radius: 28px;
+    padding: 12px 28px;
   }
 
-  /* Disabled State */
-  .btn-disabled {
-    @apply opacity-45 cursor-not-allowed shadow-none;
-    @apply hover:translate-y-0 hover:brightness-100;
+  /* Honor Product Card Hover Effect */
+  .product-card-hover {
+    @apply hover:shadow-honor-xl hover:-translate-y-1 transition-all duration-300;
   }
 }
 
 @layer utilities {
+  /* Honor Utility Classes */
   .glass {
     @apply backdrop-blur-md border;
-    background-color: rgba(31, 28, 120, 0.4);
-    border-color: rgba(46, 197, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(229, 229, 229, 0.5);
   }
 
   .glass-card {
-    @apply bg-gradient-card backdrop-blur-sm border border-border-subtle;
-    @apply shadow-lg hover:shadow-glow transition-shadow duration-300;
+    @apply bg-white border border-honor-border rounded-honor-xl;
+    @apply shadow-honor hover:shadow-honor-lg transition-shadow duration-300;
   }
 
-  .ringed {
-    @apply ring-1;
-    --tw-ring-color: rgba(46, 197, 255, 0.3);
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .container-honor {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient-honor {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
   }
 
   .sr-only {
     @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
     clip: rect(0, 0, 0, 0);
   }
-
-  .text-gradient {
-    @apply bg-gradient-to-r from-tecno-mint to-tecno-lightBlue bg-clip-text text-transparent;
-  }
 }
 
-/* Enhanced gradient mesh background with logo colors */
+/* Honor-style clean background */
 .gradient-mesh {
   position: absolute;
-  inset: -20%;
-  filter: blur(100px);
-  background:
-    radial-gradient(40% 30% at 20% 20%, #2EC5FF 0%, transparent 60%),
-    radial-gradient(30% 40% at 80% 0%, #2434FF 0%, transparent 60%),
-    radial-gradient(30% 30% at 50% 100%, #1F1C78 0%, transparent 60%),
-    radial-gradient(20% 20% at 10% 90%, #FFD53D 0%, transparent 70%);
-  animation: float 20s ease-in-out infinite alternate;
-  opacity: 0.25;
+  inset: 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%);
   pointer-events: none;
-}
-
-@keyframes float {
-  from {
-    transform: translateY(-2%) scale(1.05) rotate(0deg);
-  }
-  to {
-    transform: translateY(2%) scale(1.08) rotate(3deg);
-  }
-}
-
-/* Glow animation for interactive elements */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(46, 197, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(46, 197, 255, 0.6);
-  }
+  z-index: -1;
 }

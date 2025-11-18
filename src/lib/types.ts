@@ -8,6 +8,11 @@ export type Product = {
   tags: string[];
   specs?: Record<string, string | number>;
   featured?: boolean;
-  category: "iphone" | "android" | "accessory" | "audio" | "tablet" | "watch";
+  category: string; // Dynamic categories managed by admin
   description: string;
+  // Admin-managed status flags
+  available?: boolean; // Product is in stock and available for purchase
+  inCarousel?: boolean; // Show product in hero carousel
+  newArrival?: boolean; // Mark as new arrival
+  onSale?: boolean; // Mark as on sale
 };

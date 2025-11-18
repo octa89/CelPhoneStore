@@ -1,0 +1,54 @@
+{
+  "slides": [
+    {
+      "productId": "samsung-s24-ultra",
+      "title": "Los Mejores Smartphones",
+      "subtitle": "Al Mejor Precio",
+      "description": "Descubre nuestra selección de celulares Honor, Xiaomi, Samsung y Google",
+      "badge": "ENVÍO EXPRESS GRATIS ⚡",
+      "ctaText": "Ver Catálogo",
+      "ctaHref": "#productos",
+      "order": 0
+    },
+    {
+      "productId": "honor-magic-6-lite",
+      "title": "Honor Magic 6 Lite",
+      "subtitle": "Diseño Elegante",
+      "description": "Pantalla AMOLED de 120Hz y Snapdragon 6 Gen 1",
+      "badge": "DESTACADO",
+      "ctaText": "Comprar Ahora",
+      "ctaHref": "/product/honor-magic-6-lite",
+      "order": 1
+    },
+    {
+      "productId": "redmi-note-13-pro-plus",
+      "title": "Xiaomi Redmi Note 13 Pro+",
+      "subtitle": "Potencia y Rendimiento",
+      "description": "Dimensity 7200 con cámara de 200MP",
+      "badge": "NUEVO",
+      "ctaText": "Ver Más",
+      "ctaHref": "/product/redmi-note-13-pro-plus",
+      "order": 2
+    },
+    {
+      "productId": "google-pixel-8-pro",
+      "title": "Google Pixel 8 Pro 256GB",
+      "subtitle": "Google",
+      "description": "Fotografía con IA y la experiencia Android más pura.",
+      "badge": "NUEVO",
+      "ctaText": "Ver Más",
+      "ctaHref": "/product/google-pixel-8-pro",
+      "order": 3
+    },
+    {
+      "productId": "xiaomi-14-ultra",
+      "title": "Xiaomi 14 Ultra 512GB",
+      "subtitle": "Xiaomi",
+      "description": "Fotografía profesional con ópticas Leica y carga ultrarrápida de 120W.",
+      "badge": "NUEVO",
+      "ctaText": "Ver Más",
+      "ctaHref": "/product/xiaomi-14-ultra",
+      "order": 4
+    }
+  ]
+}

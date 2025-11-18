@@ -12,7 +12,21 @@
       "Bash(if exist .next rmdir /s /q .next)",
       "Bash(dir:*)",
       "Bash(findstr:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(npm ci:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix Amplify deployment by updating package-lock.json and build config\n\n- Regenerated package-lock.json to include missing @smithy/* dependencies\n- Added output: ''standalone'' to next.config.ts for proper AWS Amplify deployment\n- Removed redundant ''nvm install 20'' from amplify.yml (Node 20 already available)\n\nThis fixes the build failure caused by missing dependencies in the lock file.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(nul)",
+      "Bash(del:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRemove pnpm-lock.yaml and add .npmrc to fix build\n\n- Removed pnpm-lock.yaml to prevent Next.js from trying to use pnpm\n- Added .npmrc to explicitly use npm registry\n- This fixes the \"pnpm: command not found\" error during build\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "mcp__ide__getDiagnostics",
+      "Bash(powershell -Command \"if (Test-Path .next) { Remove-Item -Recurse -Force .next }\")",
+      "Bash(powershell -Command:*)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(curl:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,13 +1,14 @@
-import { getAllProducts, getProductBySlug } from "@/lib/products";
+import { getProducts } from "@/lib/data-manager";
 import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import AddToCartClient from "./purchase";
-import Image from "next/image";
+import ProductImageCarousel from "@/components/product-image-carousel";
 
 type Params = { slug: string };
 
-export function generateStaticParams(): Params[] {
-  return getAllProducts().map((p) => ({ slug: p.slug }));
+export async function generateStaticParams(): Promise<Params[]> {
+  const allProducts = await getProducts();
+  return allProducts.map((p) => ({ slug: p.slug }));
 }
 
 export default async function ProductPage({
@@ -16,23 +17,14 @@ export default async function ProductPage({
   params: Promise<Params>; // <-- Next 15: Promise
 }) {
   const { slug } = await params; // <-- await
-  const product = getProductBySlug(slug);
+  const allProducts = await getProducts();
+  const product = allProducts.find((p) => p.slug === slug);
   if (!product) return notFound();
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <div className="space-y-3">
-        {product.images.map((src, i) => (
-          <Image
-            key={i}
-            src={src}
-            alt={`${product.name} - Image ${i + 1}`}
-            width={800}
-            height={800}
-            className="w-full rounded-xl ringed"
-            priority={i === 0}
-          />
-        ))}
+      <div>
+        <ProductImageCarousel images={product.images} productName={product.name} />
       </div>
       <div>
         <h1 className="text-2xl font-bold">{product.name}</h1>

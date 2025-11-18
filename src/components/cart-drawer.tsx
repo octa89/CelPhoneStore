@@ -4,6 +4,7 @@ import { formatCurrency } from "@/lib/utils";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -126,9 +127,11 @@ export default function CartDrawer() {
           )}
           {Object.values(items).map(({ product, qty }) => (
             <div key={product.id} className="flex gap-3 items-center">
-              <img
+              <Image
                 src={product.images[0]}
                 alt={product.name}
+                width={64}
+                height={64}
                 className="h-16 w-16 rounded-lg object-cover ringed"
               />
               <div className="flex-1">

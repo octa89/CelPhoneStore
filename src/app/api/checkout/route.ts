@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { getAllProducts } from "@/lib/products";
+import { getProducts } from "@/lib/data-manager";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get all products from server-side source of truth
-    const products = getAllProducts();
+    const products = await getProducts();
     const productMap = new Map(products.map((p) => [p.id, p]));
 
     // Verify prices and build validated line items
