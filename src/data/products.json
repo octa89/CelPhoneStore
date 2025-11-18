@@ -30,7 +30,7 @@
       "inCarousel": true,
       "newArrival": false,
       "onSale": false,
-      "displayOrder": 12
+      "displayOrder": 0
     },
     {
       "id": "samsung-s24-plus",
@@ -77,7 +77,7 @@
       "featured": true,
       "category": "android",
       "description": "Fotografía con IA y la experiencia Android más pura.",
-      "displayOrder": 0
+      "displayOrder": 1
     },
     {
       "id": "google-pixel-8",
@@ -100,7 +100,7 @@
       },
       "category": "android",
       "description": "Funciones inteligentes con IA de Google en diseño compacto.",
-      "displayOrder": 1
+      "displayOrder": 2
     },
     {
       "id": "oneplus-12-pro",
@@ -123,7 +123,7 @@
       },
       "category": "android",
       "description": "Rendimiento flagship con carga ultrarrápida y OxygenOS fluido.",
-      "displayOrder": 6
+      "displayOrder": 7
     },
     {
       "id": "xiaomi-14-ultra",
@@ -146,7 +146,7 @@
       },
       "category": "android",
       "description": "Fotografía profesional con ópticas Leica y carga ultrarrápida de 120W.",
-      "displayOrder": 16
+      "displayOrder": 17
     },
     {
       "id": "honor-magic-6-lite",
@@ -171,7 +171,7 @@
       "featured": true,
       "category": "android",
       "description": "Excelente relación calidad-precio con pantalla AMOLED de 120Hz y diseño elegante.",
-      "displayOrder": 3
+      "displayOrder": 4
     },
     {
       "id": "honor-90",
@@ -195,7 +195,7 @@
       },
       "category": "android",
       "description": "Cámara principal de 200MP y pantalla AMOLED curva con tasa de refresco de 120Hz.",
-      "displayOrder": 2
+      "displayOrder": 3
     },
     {
       "id": "honor-x9b",
@@ -219,7 +219,7 @@
       },
       "category": "android",
       "description": "Diseño ultra-resistente con pantalla antigolpes y batería de larga duración.",
-      "displayOrder": 4
+      "displayOrder": 5
     },
     {
       "id": "xiaomi-14t-pro",
@@ -244,7 +244,7 @@
       "featured": true,
       "category": "android",
       "description": "Potencia extrema con procesador MediaTek de última generación y sistema de cámaras Leica.",
-      "displayOrder": 17
+      "displayOrder": 16
     },
     {
       "id": "redmi-note-13-pro-plus",
@@ -268,7 +268,7 @@
       },
       "category": "android",
       "description": "El mejor Redmi Note con cámara de 200MP y carga rápida de 120W.",
-      "displayOrder": 8
+      "displayOrder": 9
     },
     {
       "id": "poco-f6",
@@ -293,7 +293,7 @@
       "featured": true,
       "category": "android",
       "description": "Flagship killer con rendimiento gaming extremo y precio competitivo.",
-      "displayOrder": 7
+      "displayOrder": 8
     },
     {
       "id": "samsung-buds2-pro",
@@ -315,7 +315,7 @@
       },
       "category": "audio",
       "description": "Intelligent ANC and immersive 360 Audio for Galaxy devices.",
-      "displayOrder": 11
+      "displayOrder": 12
     },
     {
       "id": "samsung-tab-s9-ultra",
@@ -385,7 +385,7 @@
       },
       "category": "tablet",
       "description": "Versatile 2-in-1 laptop and tablet with full Windows experience.",
-      "displayOrder": 5
+      "displayOrder": 6
     },
     {
       "id": "product-1763495811551",
@@ -413,7 +413,7 @@
       "inCarousel": true,
       "newArrival": true,
       "onSale": true,
-      "displayOrder": 10
+      "displayOrder": 11
     },
     {
       "id": "product-1763497453029",
@@ -437,8 +437,8 @@
       "category": "android",
       "description": "\nMarca\tSamsung\nSistema operativo\tAndroid\nTamaño de la memoria RAM instalada\t4 GB\nModelo de CPU\tMediaTek Helio\nVelocidad de la CPU\t2 GHz\nCapacidad de almacenamiento de memoria\t64 GB\nTamaño de pantalla\t6,7 Pulgadas\nResolución\t720 x 1600\nVelocidad de actualización\t60 hertz\nNombre del modelo\tSamsung Galaxy A06",
       "featured": true,
-      "displayOrder": 9
+      "displayOrder": 10
     }
   ],
-  "lastUpdated": "2025-11-18T20:29:44.684Z"
+  "lastUpdated": "2025-11-18T21:08:01.056Z"
 }

@@ -1,9 +1,15 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
-const SESSION_SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || "fallback-secret-key"
-);
+// Validate SESSION_SECRET exists and is strong
+if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+  throw new Error(
+    "SESSION_SECRET must be set in .env.local and be at least 32 characters long. " +
+    "Generate a strong secret: openssl rand -base64 32"
+  );
+}
+
+const SESSION_SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export interface SessionData {
@@ -94,8 +100,16 @@ export async function clearSession() {
 }
 
 export function validateCredentials(username: string, password: string): boolean {
-  const validUsername = process.env.ADMIN_USERNAME || "lucia";
-  const validPassword = process.env.ADMIN_PASSWORD || "Emilio";
+  const validUsername = process.env.ADMIN_USERNAME;
+  const validPassword = process.env.ADMIN_PASSWORD;
 
-  return username === validUsername && password === validPassword;
+  if (!validUsername || !validPassword) {
+    throw new Error("ADMIN_USERNAME and ADMIN_PASSWORD must be set in .env.local");
+  }
+
+  // Use constant-time comparison to prevent timing attacks
+  const usernameMatch = username === validUsername;
+  const passwordMatch = password === validPassword;
+
+  return usernameMatch && passwordMatch;
 }

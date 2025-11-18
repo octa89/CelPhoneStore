@@ -25,7 +25,17 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Error al iniciar sesión");
+        // Handle rate limiting
+        if (res.status === 429) {
+          setError(data.error || "Demasiados intentos. Por favor intenta más tarde.");
+        } else if (res.status === 401) {
+          const attemptsMsg = data.attemptsRemaining !== undefined
+            ? ` Intentos restantes: ${data.attemptsRemaining}`
+            : "";
+          setError(`${data.error}${attemptsMsg}`);
+        } else {
+          setError(data.error || "Error al iniciar sesión");
+        }
         return;
       }
 
@@ -76,7 +86,7 @@ export default function AdminLoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                autoComplete="off"
+                autoComplete="username"
                 className="w-full px-4 py-3 bg-tecno-bg/60 border border-tecno-cyan/30 rounded-lg outline-none focus:border-tecno-cyan focus:ring-2 focus:ring-tecno-cyan/20 transition-all"
                 placeholder="Ingrese su usuario"
               />
@@ -93,7 +103,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autoComplete="new-password"
+                autoComplete="current-password"
                 className="w-full px-4 py-3 bg-tecno-bg/60 border border-tecno-cyan/30 rounded-lg outline-none focus:border-tecno-cyan focus:ring-2 focus:ring-tecno-cyan/20 transition-all"
                 placeholder="Ingrese su contraseña"
               />
