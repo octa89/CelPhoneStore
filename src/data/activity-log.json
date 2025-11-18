@@ -1,6 +1,13 @@
 {
   "entries": [
     {
+      "id": "1763508756948",
+      "timestamp": "2025-11-18T23:32:36.948Z",
+      "action": "Orden de Producto Actualizado",
+      "details": "Google Pixel 8 Pro 256GB - Posición: 2",
+      "type": "product"
+    },
+    {
       "id": "1763508535835",
       "timestamp": "2025-11-18T23:28:55.835Z",
       "action": "Orden de Producto Actualizado",
