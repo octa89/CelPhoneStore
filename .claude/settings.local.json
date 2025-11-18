@@ -27,7 +27,9 @@
       "Bash(timeout /t 10 /nobreak)",
       "Bash(curl:*)",
       "Bash(node:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
