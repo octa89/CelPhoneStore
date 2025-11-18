@@ -20,8 +20,8 @@ export default function ProductOrderPage() {
         const data = await res.json();
         // Sort by displayOrder if it exists, otherwise by name
         const sorted = (data.products || []).sort((a: Product, b: Product) => {
-          const orderA = (a as any).displayOrder ?? 999;
-          const orderB = (b as any).displayOrder ?? 999;
+          const orderA = ('displayOrder' in a ? (a.displayOrder as number) : 999) ?? 999;
+          const orderB = ('displayOrder' in b ? (b.displayOrder as number) : 999) ?? 999;
           if (orderA !== orderB) return orderA - orderB;
           return a.name.localeCompare(b.name);
         });

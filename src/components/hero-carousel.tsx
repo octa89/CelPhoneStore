@@ -46,7 +46,7 @@ export default function HeroCarousel() {
           // Map carousel slides to products to get images
           const slidesWithImages: SlideWithImage[] = carouselSlides
             .map((slide, index) => {
-              const product = products.find((p: any) => p.id === slide.productId);
+              const product = products.find((p: { id: string; images: string[] }) => p.id === slide.productId);
               if (!product) return null;
 
               return {

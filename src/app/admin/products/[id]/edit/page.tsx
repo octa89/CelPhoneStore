@@ -10,25 +10,24 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [error, setError] = useState("");
 
   useEffect(() => {
+    async function loadProduct() {
+      try {
+        const res = await fetch(`/api/admin/products/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProduct(data.product);
+        } else {
+          setError("Producto no encontrado");
+        }
+      } catch (err) {
+        console.error("Error loading product:", err);
+        setError("Error al cargar el producto");
+      } finally {
+        setLoading(false);
+      }
+    }
     loadProduct();
   }, [id]);
-
-  async function loadProduct() {
-    try {
-      const res = await fetch(`/api/admin/products/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setProduct(data.product);
-      } else {
-        setError("Producto no encontrado");
-      }
-    } catch (err) {
-      console.error("Error loading product:", err);
-      setError("Error al cargar el producto");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   if (loading) {
     return (

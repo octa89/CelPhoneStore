@@ -472,7 +472,27 @@
       "description": "256GB, 8GB, Dual SIM | 6.7 pulgadas 120Hz AMOLED, IP67 resistente al agua, Android 15 | Modelo internacional desbloqueado de fábrica para T-Mobile, Global | Paquete",
       "featured": false,
       "displayOrder": 18
+    },
+    {
+      "id": "product-1763509154695",
+      "slug": "samsung-galaxy-a17-5g-ai",
+      "name": "Samsung Galaxy A17 5G Ai",
+      "brand": "Samsung",
+      "priceCents": 21800,
+      "images": [
+        "https://m.media-amazon.com/images/I/61eKFXmDLoL._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51qHz+soH2L._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51YlkFo+ofL._AC_SX679_.jpg"
+      ],
+      "tags": [],
+      "specs": {
+        "Capacidad de almacenamiento de memoria": "256GB",
+        "Tamaño de la memoria RAM instalada": "8GB"
+      },
+      "category": "android",
+      "description": " desbloqueado (compatible con T-Mobile Mint Tello & Global) SM-A176B/DS Dual SIM / 6.7 pulgadas 50MP Triple (negro SM-A176BZKQGTO)",
+      "featured": true
     }
   ],
-  "lastUpdated": "2025-11-18T23:32:36.944Z"
+  "lastUpdated": "2025-11-18T23:39:14.697Z"
 }
