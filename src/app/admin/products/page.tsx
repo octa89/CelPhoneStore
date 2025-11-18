@@ -94,7 +94,7 @@ export default function AdminProductsPage() {
       const res = await fetch("/api/admin/carousel");
       if (res.ok) {
         const data = await res.json();
-        const productIds = new Set(data.slides?.map((slide: { productId: string }) => slide.productId) || []);
+        const productIds = new Set<string>(data.slides?.map((slide: { productId: string }) => slide.productId) || []);
         setCarouselProductIds(productIds);
       }
     } catch (error) {

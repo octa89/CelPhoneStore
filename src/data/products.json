@@ -361,7 +361,10 @@
       "brand": "Samsung",
       "priceCents": 79900,
       "images": [
-        "https://images.unsplash.com/photo-1493661969828-411ef6a6624d?q=80&w=1592&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://m.media-amazon.com/images/I/71RXkwrLY4L._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/71b46FaP-2L._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/617sVDpBuBL._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/616HN4KwZ0L._AC_SX679_.jpg"
       ],
       "tags": [
         "Snapdragon 8 Gen 2",
@@ -375,7 +378,12 @@
       },
       "category": "tablet",
       "description": "Premium AMOLED display with S Pen for creative work.",
-      "displayOrder": 15
+      "displayOrder": 15,
+      "featured": false,
+      "available": true,
+      "inCarousel": false,
+      "newArrival": false,
+      "onSale": false
     },
     {
       "id": "surface-pro-9",
@@ -494,5 +502,5 @@
       "featured": true
     }
   ],
-  "lastUpdated": "2025-11-18T23:39:14.697Z"
+  "lastUpdated": "2025-11-18T23:43:03.353Z"
 }
