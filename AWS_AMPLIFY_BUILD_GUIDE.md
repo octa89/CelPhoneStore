@@ -1,0 +1,210 @@
+# AWS Amplify Build Configuration Guide
+
+## Overview
+This document outlines best practices to prevent build errors on AWS Amplify for Next.js 15 with TypeScript.
+
+## Current Issues & Solutions
+
+### Problem 1: TypeScript Errors Breaking Builds
+**Issue:** Amplify fails builds when TypeScript finds type errors, even minor ones.
+
+**Solutions Implemented:**
+1. ✅ Using `npm install` instead of `npm ci` in amplify.yml
+2. ✅ Added `output: 'standalone'` in next.config.ts for optimal serverless deployment
+3. ✅ Fixed all TypeScript errors proactively
+
+**Recommended (Optional):** Add safety net to next.config.ts:
+```typescript
+const nextConfig: NextConfig = {
+  output: "standalone",
+  typescript: {
+    // ⚠️ Only use in emergency - better to fix types!
+    ignoreBuildErrors: false, // Set to true only if needed
+  },
+  eslint: {
+    // ⚠️ Only use in emergency - better to fix linting!
+    ignoreDuringBuilds: false, // Set to true only if needed
+  },
+};
+```
+
+### Problem 2: Package Lock File Sync Issues
+**Issue:** `npm ci` fails when package-lock.json is out of sync with package.json
+
+**Solution:** ✅ Changed amplify.yml to use `npm install` instead of `npm ci`
+- `npm install` resolves dependencies dynamically
+- Auto-updates lock file if needed
+- More forgiving with version mismatches
+
+### Problem 3: Missing Type Definitions
+**Issue:** Properties like `displayOrder` used in code but not defined in types
+
+**Solution:** ✅ Always update type definitions when adding new features
+```typescript
+// src/lib/types.ts
+export type Product = {
+  // ... existing properties
+  displayOrder?: number; // Added for product ordering feature
+};
+```
+
+## Best Practices to Prevent Future Errors
+
+### 1. **Local Type Checking Before Push**
+Always run these commands locally before committing:
+
+```bash
+# Check TypeScript errors
+npx tsc --noEmit
+
+# Check ESLint errors
+npm run lint
+
+# Test production build
+npm run build
+```
+
+### 2. **Pre-commit Hook (Recommended)**
+Create `.husky/pre-commit` to automatically check before commits:
+
+```bash
+#!/bin/sh
+npm run lint
+npx tsc --noEmit
+```
+
+### 3. **Type-Safe Development**
+- Always define types for new properties
+- Use TypeScript strict mode (already enabled)
+- Avoid using `any` type
+- Use proper type assertions instead of `as any`
+
+### 4. **Amplify Configuration**
+
+**amplify.yml Best Practices:**
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 20  # Use Node 20+ for Next.js 15
+        - npm install  # More forgiving than npm ci
+        - npx next telemetry disable
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next  # Required for Next.js SSR
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
+```
+
+### 5. **TypeScript Configuration**
+
+**tsconfig.json Best Practices:**
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    // ... other options
+  },
+  "exclude": ["node_modules", "amplify", ".next", "out"]
+}
+```
+
+### 6. **Environment Variables**
+- Never use `AWS_` prefix for custom environment variables
+- Set in Amplify Console for production
+- Use `.env.local` for development
+- Ensure all required env vars are set before deployment
+
+## Monitoring & Debugging
+
+### Check Build Logs
+1. Go to AWS Amplify Console
+2. Select your app
+3. Click on the failed build
+4. Review the detailed logs to identify specific errors
+
+### Common Error Patterns
+
+**TypeScript Errors:**
+```
+Type error: Property 'X' does not exist on type 'Y'
+```
+**Fix:** Add property to type definition
+
+**Package Errors:**
+```
+npm ci can only install packages when package.json and package-lock.json are in sync
+```
+**Fix:** Already solved by using `npm install`
+
+**Missing Dependencies:**
+```
+Missing: @package/name from lock file
+```
+**Fix:** Run `npm install` locally and commit package-lock.json
+
+## Emergency Options (Last Resort)
+
+If you need to deploy urgently and can't fix TypeScript errors immediately:
+
+### Option 1: Disable TypeScript Checks (NOT RECOMMENDED)
+```typescript
+// next.config.ts
+const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true, // ⚠️ Temporary only!
+  },
+};
+```
+
+### Option 2: Disable ESLint Checks (NOT RECOMMENDED)
+```typescript
+// next.config.ts
+const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true, // ⚠️ Temporary only!
+  },
+};
+```
+
+⚠️ **WARNING:** These options hide problems instead of fixing them. Use only for emergency deployments and fix issues immediately after.
+
+## Continuous Improvement
+
+### Weekly Checks
+- Run `npm audit` for security vulnerabilities
+- Update dependencies: `npm update`
+- Regenerate lock file: `rm -f package-lock.json && npm install`
+- Test build locally: `npm run build`
+
+### Before Each Feature
+- Define types first
+- Write code with type safety
+- Test locally
+- Check for linting errors
+- Commit with clean build
+
+## Summary
+
+**Prevention Checklist:**
+- [x] Use `npm install` in amplify.yml (more forgiving)
+- [x] Set `output: 'standalone'` in next.config.ts
+- [x] Always define types for new properties
+- [x] Run `npm run lint` before commits
+- [x] Run `npx tsc --noEmit` before commits
+- [x] Test `npm run build` locally before push
+- [x] Keep dependencies updated
+- [ ] (Optional) Set up pre-commit hooks
+- [ ] (Optional) Add TypeScript/ESLint ignore flags for emergency
+
+**Key Takeaway:** Prevention is better than emergency fixes. Always validate locally before pushing to avoid Amplify build failures.

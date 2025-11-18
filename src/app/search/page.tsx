@@ -1,5 +1,6 @@
 import { getProducts } from "@/lib/data-manager";
 import ProductGrid from "@/components/product-grid";
+import type { Product } from "@/lib/types";
 
 type Search = { q?: string };
 
@@ -10,7 +11,7 @@ export default async function SearchPage({
 }) {
   const { q = "" } = await searchParams;
 
-  let results = [];
+  let results: Product[] = [];
   if (q) {
     const allProducts = await getProducts();
     // Filter by available and search term
