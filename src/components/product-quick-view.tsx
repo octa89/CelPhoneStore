@@ -50,13 +50,14 @@ export default function ProductQuickView({ product, onClose }: ProductQuickViewP
   console.log("RENDERING MODAL FOR:", product.name);
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/70 z-[9999] overflow-y-auto flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/70 z-[9999] overflow-y-auto p-4 md:p-6" onClick={onClose}>
+      <div className="min-h-full flex items-center justify-center py-4">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="relative max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
+          className="relative max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden my-4"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button */}
@@ -68,10 +69,11 @@ export default function ProductQuickView({ product, onClose }: ProductQuickViewP
             ✕
           </button>
 
-          <div className="grid md:grid-cols-2 gap-8 p-8">
+          {/* Scrollable content area */}
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 p-4 md:p-8 overflow-y-auto max-h-[calc(90vh-2rem)]">
             {/* Image Section */}
-            <div className="relative">
-              <div className="relative aspect-square rounded-xl overflow-hidden bg-honor-bg-light">
+            <div className="relative flex-shrink-0">
+              <div className="relative aspect-square max-h-[300px] md:max-h-[400px] rounded-xl overflow-hidden bg-honor-bg-light">
                 <Image
                   src={product.images[0]}
                   alt={product.name}
@@ -109,13 +111,13 @@ export default function ProductQuickView({ product, onClose }: ProductQuickViewP
               </p>
 
               {/* Name */}
-              <h2 className="text-3xl font-bold text-honor-text-primary mb-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-honor-text-primary mb-3">
                 {product.name}
               </h2>
 
               {/* Price */}
               <div className="mb-4">
-                <span className="text-4xl font-bold text-honor-primary">
+                <span className="text-3xl md:text-4xl font-bold text-honor-primary">
                   {formatCurrency(product.priceCents)}
                 </span>
               </div>
@@ -159,17 +161,17 @@ export default function ProductQuickView({ product, onClose }: ProductQuickViewP
               )}
 
               {/* Actions */}
-              <div className="mt-auto flex flex-col gap-3">
+              <div className="mt-6 flex flex-col gap-3">
                 <button
                   onClick={handleAddToCart}
-                  className="btn-primary w-full text-lg py-4 block"
+                  className="btn-primary w-full text-base md:text-lg py-3 md:py-4 block"
                 >
                   Agregar al Carrito
                 </button>
                 <Link
                   href={`/product/${product.slug}`}
                   onClick={onClose}
-                  className="btn-secondary w-full text-center py-4 block"
+                  className="btn-secondary w-full text-center py-3 md:py-4 block text-base"
                 >
                   Ver Detalles Completos
                 </Link>
@@ -177,6 +179,7 @@ export default function ProductQuickView({ product, onClose }: ProductQuickViewP
             </div>
           </div>
         </motion.div>
+      </div>
     </div>
   );
 
