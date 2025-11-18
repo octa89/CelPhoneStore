@@ -19,7 +19,7 @@ export default function ProductGrid({
   };
 
   return (
-    <section id="productos" className="section-padding scroll-mt-20">
+    <section id="productos" className="scroll-mt-20">
       {title && (
         <div className="mb-12 text-center">
           <h2 className="text-4xl md:text-5xl font-semibold text-honor-text-primary mb-4">

@@ -16,13 +16,13 @@ export default async function HomePage() {
 
       {/* Featured Products Section */}
       {featured.length > 0 && (
-        <div className="container-honor">
+        <div className="container-honor section-padding">
           <ProductGrid items={featured} title="Productos Destacados" />
         </div>
       )}
 
       {/* All Products Section */}
-      <div className="container-honor">
+      <div className="container-honor section-padding">
         <ProductGrid items={items} title="Catálogo Completo" />
       </div>
     </div>

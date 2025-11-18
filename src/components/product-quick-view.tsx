@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 import { useCart } from "@/store/use-cart";

@@ -45,7 +45,7 @@ export default function ProductImageCarousel({ images, productName }: ProductIma
               alt={`${productName} - Image ${currentIndex + 1}`}
               width={600}
               height={600}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               priority={currentIndex === 0}
             />
           </motion.div>

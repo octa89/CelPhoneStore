@@ -74,7 +74,7 @@
         "Chip": "Google Tensor G3",
         "Pantalla": "6.7\""
       },
-      "featured": true,
+      "featured": false,
       "category": "android",
       "description": "Fotografía con IA y la experiencia Android más pura.",
       "displayOrder": 1
@@ -168,7 +168,7 @@
         "Pantalla": "6.78\"",
         "RAM": "8 GB"
       },
-      "featured": true,
+      "featured": false,
       "category": "android",
       "description": "Excelente relación calidad-precio con pantalla AMOLED de 120Hz y diseño elegante.",
       "displayOrder": 4
@@ -241,7 +241,7 @@
         "Pantalla": "6.67\"",
         "RAM": "12 GB"
       },
-      "featured": true,
+      "featured": false,
       "category": "android",
       "description": "Potencia extrema con procesador MediaTek de última generación y sistema de cámaras Leica.",
       "displayOrder": 16
@@ -277,7 +277,8 @@
       "brand": "Xiaomi",
       "priceCents": 49900,
       "images": [
-        "https://images.unsplash.com/photo-1568171284620-57dc85d9f210?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        "https://m.media-amazon.com/images/I/61INobkIIYL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/414sxSyth5L._AC_.jpg"
       ],
       "tags": [
         "Snapdragon 8s Gen 3",
@@ -290,10 +291,14 @@
         "Pantalla": "6.67\"",
         "RAM": "12 GB"
       },
-      "featured": true,
+      "featured": false,
       "category": "android",
-      "description": "Flagship killer con rendimiento gaming extremo y precio competitivo.",
-      "displayOrder": 8
+      "description": "512 Gb + 12 Gb versión global desbloqueada 6.67 pulgadas 120Hz 50Mp triple cámara (negro)",
+      "displayOrder": 8,
+      "available": true,
+      "inCarousel": false,
+      "newArrival": false,
+      "onSale": false
     },
     {
       "id": "samsung-buds2-pro",
@@ -336,7 +341,7 @@
         "Display": "14.6\"",
         "Storage": "256 GB"
       },
-      "featured": true,
+      "featured": false,
       "category": "tablet",
       "description": "Massive productivity powerhouse with included S Pen.",
       "displayOrder": 14
@@ -409,7 +414,7 @@
       },
       "category": "android",
       "description": "Samsung Galaxy A16 5G Serie A, teléfono inteligente Android desbloqueado, pantalla AMOLED grande, diseño duradero, carga súper rápida, almacenamiento expandible, conectividad 5G, versión",
-      "featured": true,
+      "featured": false,
       "inCarousel": true,
       "newArrival": true,
       "onSale": true,
@@ -436,9 +441,30 @@
       },
       "category": "android",
       "description": "\nMarca\tSamsung\nSistema operativo\tAndroid\nTamaño de la memoria RAM instalada\t4 GB\nModelo de CPU\tMediaTek Helio\nVelocidad de la CPU\t2 GHz\nCapacidad de almacenamiento de memoria\t64 GB\nTamaño de pantalla\t6,7 Pulgadas\nResolución\t720 x 1600\nVelocidad de actualización\t60 hertz\nNombre del modelo\tSamsung Galaxy A06",
-      "featured": true,
+      "featured": false,
       "displayOrder": 10
+    },
+    {
+      "id": "product-1763507289547",
+      "slug": "samsung-galaxy-a26-5g-2025-con-ia",
+      "name": "SAMSUNG Galaxy A26 5G 2025 con IA",
+      "brand": "Samsung",
+      "priceCents": 21400,
+      "images": [
+        "https://m.media-amazon.com/images/I/51ZKIJ+qxxL._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/61kjcg-fDhL._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/61uWAa0+NEL._AC_SX679_.jpg"
+      ],
+      "tags": [],
+      "specs": {
+        "Capacidad de almacenamiento de memoria": "256 GB",
+        "Tamaño de la memoria RAM": "8GB"
+      },
+      "category": "android",
+      "description": "256GB, 8GB, Dual SIM | 6.7 pulgadas 120Hz AMOLED, IP67 resistente al agua, Android 15 | Modelo internacional desbloqueado de fábrica para T-Mobile, Global | Paquete",
+      "featured": false,
+      "displayOrder": 18
     }
   ],
-  "lastUpdated": "2025-11-18T21:08:01.056Z"
+  "lastUpdated": "2025-11-18T23:28:55.831Z"
 }

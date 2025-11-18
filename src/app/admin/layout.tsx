@@ -50,10 +50,10 @@ export default function AdminLayout({
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex min-h-[calc(100vh-4rem)]">
         {/* Sidebar Navigation */}
-        <aside className="w-64 border-r border-tecno-cyan/20 bg-tecno-bgDark/50 min-h-[calc(100vh-4rem)] p-4">
-          <nav className="space-y-2">
+        <aside className="w-64 border-r border-tecno-cyan/20 bg-tecno-bgDark/50 p-4 flex flex-col">
+          <nav className="space-y-2 flex-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -72,6 +72,21 @@ export default function AdminLayout({
               );
             })}
           </nav>
+
+          {/* Footer in Sidebar */}
+          <div className="mt-auto pt-4 border-t border-tecno-cyan/20">
+            <p className="text-xs text-text-muted text-center">
+              Desarrollado por{" "}
+              <a
+                href="https://www.geolink.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-tecno-cyan hover:text-tecno-mint transition-colors font-semibold"
+              >
+                GeoLink IT Services
+              </a>
+            </p>
+          </div>
         </aside>
 
         {/* Main Content */}

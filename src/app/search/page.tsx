@@ -26,12 +26,24 @@ export default async function SearchPage({
   }
 
   return (
-    <div>
-      <h1 className="text-xl font-semibold mb-4">Buscar {q && `"${q}"`}</h1>
+    <div className="container-honor section-padding">
+      <h1 className="text-3xl font-bold text-honor-text-primary mb-2">
+        Resultados de búsqueda {q && `para "${q}"`}
+      </h1>
+      {q && results.length > 0 && (
+        <p className="text-honor-text-muted mb-8">
+          Se encontraron {results.length} producto{results.length !== 1 ? 's' : ''}
+        </p>
+      )}
       {q ? (
         <ProductGrid items={results} />
       ) : (
-        <p>Escribe un término de búsqueda en la barra superior.</p>
+        <div className="text-center py-20">
+          <div className="text-6xl mb-4 opacity-30">🔍</div>
+          <p className="text-honor-text-secondary text-lg">
+            Escribe un término de búsqueda en la barra superior para encontrar productos.
+          </p>
+        </div>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/store/use-cart";
 import { Badge } from "./ui";
 import MobileMenu from "./mobile-menu";
+import BrandsDropdown from "./brands-dropdown";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
@@ -82,6 +83,11 @@ export default function Navbar() {
             </button>
           </div>
         </form>
+
+        {/* Navigation Links */}
+        <div className="hidden lg:flex items-center gap-2">
+          <BrandsDropdown />
+        </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-4">

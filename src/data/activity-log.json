@@ -1,0 +1,81 @@
+{
+  "entries": [
+    {
+      "id": "1763508535835",
+      "timestamp": "2025-11-18T23:28:55.835Z",
+      "action": "Orden de Producto Actualizado",
+      "details": "POCO F6 512GB - Posición: 9",
+      "type": "product"
+    },
+    {
+      "id": "1763507581719",
+      "timestamp": "2025-11-18T23:13:01.719Z",
+      "action": "Orden de Productos Actualizado",
+      "details": "19 productos reorganizados en la página principal",
+      "type": "product"
+    },
+    {
+      "id": "1763507496328",
+      "timestamp": "2025-11-18T23:11:36.328Z",
+      "action": "Producto Editado",
+      "details": "SAMSUNG Galaxy A26 5G 2025 con IA - Samsung",
+      "type": "product"
+    },
+    {
+      "id": "1763507495261",
+      "timestamp": "2025-11-18T23:11:35.261Z",
+      "action": "Producto Editado",
+      "details": "SAMSUNG Galaxy A06 4G LTE (64 GB + 4 GB)  - Samsung",
+      "type": "product"
+    },
+    {
+      "id": "1763507493788",
+      "timestamp": "2025-11-18T23:11:33.788Z",
+      "action": "Producto Editado",
+      "details": "Samsung Galaxy A16 5G Serie A - Samsung",
+      "type": "product"
+    },
+    {
+      "id": "1763507492640",
+      "timestamp": "2025-11-18T23:11:32.640Z",
+      "action": "Producto Editado",
+      "details": "Samsung Galaxy Tab S9 Ultra - Samsung",
+      "type": "product"
+    },
+    {
+      "id": "1763507491013",
+      "timestamp": "2025-11-18T23:11:31.013Z",
+      "action": "Producto Editado",
+      "details": "POCO F6 512GB - Xiaomi",
+      "type": "product"
+    },
+    {
+      "id": "1763507490046",
+      "timestamp": "2025-11-18T23:11:30.046Z",
+      "action": "Producto Editado",
+      "details": "Xiaomi 14T Pro 512GB - Xiaomi",
+      "type": "product"
+    },
+    {
+      "id": "1763507489027",
+      "timestamp": "2025-11-18T23:11:29.027Z",
+      "action": "Producto Editado",
+      "details": "Honor Magic 6 Lite 256GB - Honor",
+      "type": "product"
+    },
+    {
+      "id": "1763507486448",
+      "timestamp": "2025-11-18T23:11:26.448Z",
+      "action": "Producto Editado",
+      "details": "Google Pixel 8 Pro 256GB - Google",
+      "type": "product"
+    },
+    {
+      "id": "1763507485592",
+      "timestamp": "2025-11-18T23:11:25.592Z",
+      "action": "Producto Editado",
+      "details": "Google Pixel 8 Pro 256GB - Google",
+      "type": "product"
+    }
+  ]
+}

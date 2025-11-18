@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { updateProduct } from "@/lib/data-manager";
+import { updateProduct, addActivityLog } from "@/lib/data-manager";
 
 export async function PUT(request: Request) {
   try {
@@ -12,10 +12,17 @@ export async function PUT(request: Request) {
       );
     }
 
-    // Update each product with its display order
+    // Update each product with its display order (skip individual logs)
     for (const update of updates) {
-      await updateProduct(update.id, { displayOrder: update.displayOrder });
+      await updateProduct(update.id, { displayOrder: update.displayOrder }, true);
     }
+
+    // Log a single activity for the entire reorder action
+    await addActivityLog(
+      "Orden de Productos Actualizado",
+      `${updates.length} productos reorganizados en la página principal`,
+      "product"
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

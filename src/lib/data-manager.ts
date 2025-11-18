@@ -6,6 +6,7 @@ const DATA_DIR = path.join(process.cwd(), "src", "data");
 const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
 const CATEGORIES_FILE = path.join(DATA_DIR, "categories.json");
 const CAROUSEL_FILE = path.join(DATA_DIR, "carousel.json");
+const ACTIVITY_LOG_FILE = path.join(DATA_DIR, "activity-log.json");
 
 interface ProductsData {
   products: Product[];
@@ -29,6 +30,18 @@ interface CarouselSlide {
 interface CarouselData {
   slides: CarouselSlide[];
   lastUpdated: string;
+}
+
+export interface ActivityLogEntry {
+  id: string;
+  timestamp: string;
+  action: string;
+  details: string;
+  type: "product" | "carousel" | "category" | "order";
+}
+
+interface ActivityLogData {
+  entries: ActivityLogEntry[];
 }
 
 // Ensure data directory exists
@@ -79,27 +92,59 @@ export async function addProduct(product: Product): Promise<Product> {
   const products = await getProducts();
   products.push(product);
   await saveProducts(products);
+  await addActivityLog("Producto Agregado", `${product.name} - ${product.brand}`, "product");
   return product;
 }
 
-export async function updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
+export async function updateProduct(
+  id: string,
+  updates: Partial<Product>,
+  skipLog: boolean = false
+): Promise<Product | null> {
   const products = await getProducts();
   const index = products.findIndex((p) => p.id === id);
 
   if (index === -1) return null;
 
+  const oldProduct = products[index];
   products[index] = { ...products[index], ...updates };
   await saveProducts(products);
+
+  if (!skipLog) {
+    // Determine what was changed
+    let action = "Producto Editado";
+    let details = `${products[index].name} - ${products[index].brand}`;
+
+    if (updates.priceCents !== undefined && updates.priceCents !== oldProduct.priceCents) {
+      action = "Precio Actualizado";
+      const oldPrice = (oldProduct.priceCents / 100).toFixed(2);
+      const newPrice = (updates.priceCents / 100).toFixed(2);
+      details = `${products[index].name}: $${oldPrice} → $${newPrice}`;
+    } else if (updates.displayOrder !== undefined) {
+      action = "Orden de Producto Actualizado";
+      details = `${products[index].name} - Posición: ${updates.displayOrder + 1}`;
+    } else if (updates.available !== undefined) {
+      action = updates.available ? "Producto Disponible" : "Producto No Disponible";
+      details = `${products[index].name}`;
+    }
+
+    await addActivityLog(action, details, "product");
+  }
+
   return products[index];
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
   const products = await getProducts();
+  const deletedProduct = products.find((p) => p.id === id);
   const filtered = products.filter((p) => p.id !== id);
 
   if (filtered.length === products.length) return false;
 
   await saveProducts(filtered);
+  if (deletedProduct) {
+    await addActivityLog("Producto Eliminado", `${deletedProduct.name} - ${deletedProduct.brand}`, "product");
+  }
   return true;
 }
 
@@ -167,4 +212,58 @@ export async function saveCarousel(slides: CarouselSlide[]): Promise<void> {
     lastUpdated: new Date().toISOString(),
   };
   await fs.writeFile(CAROUSEL_FILE, JSON.stringify(data, null, 2), "utf-8");
+  await addActivityLog("Carrusel Actualizado", `${slides.length} slides configuradas`, "carousel");
+}
+
+// Activity Log operations
+export async function getActivityLog(limit: number = 10): Promise<ActivityLogEntry[]> {
+  try {
+    await ensureDataDir();
+    const data = await fs.readFile(ACTIVITY_LOG_FILE, "utf-8");
+    const parsed: ActivityLogData = JSON.parse(data);
+    // Return most recent entries first
+    return parsed.entries.slice(0, limit);
+  } catch {
+    return [];
+  }
+}
+
+export async function addActivityLog(
+  action: string,
+  details: string,
+  type: ActivityLogEntry["type"]
+): Promise<void> {
+  try {
+    await ensureDataDir();
+    let entries: ActivityLogEntry[] = [];
+
+    try {
+      const data = await fs.readFile(ACTIVITY_LOG_FILE, "utf-8");
+      const parsed: ActivityLogData = JSON.parse(data);
+      entries = parsed.entries;
+    } catch {
+      // File doesn't exist yet
+    }
+
+    const newEntry: ActivityLogEntry = {
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      action,
+      details,
+      type,
+    };
+
+    // Add new entry at the beginning (most recent first)
+    entries.unshift(newEntry);
+
+    // Keep only last 100 entries
+    if (entries.length > 100) {
+      entries = entries.slice(0, 100);
+    }
+
+    const data: ActivityLogData = { entries };
+    await fs.writeFile(ACTIVITY_LOG_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error adding activity log:", error);
+  }
 }

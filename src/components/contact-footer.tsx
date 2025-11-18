@@ -188,7 +188,17 @@ export default function ContactFooter() {
         <div className="pt-8 border-t border-honor-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-honor-text-secondary">
             <p>&copy; {new Date().getFullYear()} Tecno Express. Todos los derechos reservados.</p>
-            <p>Desarrollado por <span className="font-semibold text-honor-text-primary">GeoLink IT Services</span></p>
+            <p>
+              Desarrollado por{" "}
+              <a
+                href="https://www.geolink.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-honor-primary hover:text-honor-accent transition-colors underline"
+              >
+                GeoLink IT Services
+              </a>
+            </p>
           </div>
         </div>
       </div>

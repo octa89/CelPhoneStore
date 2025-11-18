@@ -77,7 +77,7 @@ export default function HeroCarousel() {
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 8000); // Changed from 5000ms (5s) to 8000ms (8s)
     return () => clearInterval(timer);
   }, [slides.length]);
 
