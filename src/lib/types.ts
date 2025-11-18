@@ -15,4 +15,5 @@ export type Product = {
   inCarousel?: boolean; // Show product in hero carousel
   newArrival?: boolean; // Mark as new arrival
   onSale?: boolean; // Mark as on sale
+  displayOrder?: number; // Order in which products are displayed on the main page
 };
