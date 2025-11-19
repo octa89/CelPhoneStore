@@ -30,7 +30,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git config:*)",
-      "Bash(GIT_CURL_VERBOSE=1 GIT_TRACE=1 git push:*)"
+      "Bash(GIT_CURL_VERBOSE=1 GIT_TRACE=1 git push:*)",
+      "Bash(Select-String -Pattern \"Compil|Error|warn\")",
+      "Bash(Select-Object -First 50)"
     ],
     "deny": [],
     "ask": []

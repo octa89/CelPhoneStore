@@ -53,7 +53,7 @@
       },
       "category": "android",
       "description": "Experiencia Galaxy premium con pantalla mejorada y alto rendimiento.",
-      "displayOrder": 13
+      "displayOrder": 14
     },
     {
       "id": "google-pixel-8-pro",
@@ -108,7 +108,7 @@
       },
       "category": "android",
       "description": "Funciones inteligentes con IA de Google en diseño compacto.",
-      "displayOrder": 2
+      "displayOrder": 3
     },
     {
       "id": "oneplus-12-pro",
@@ -131,7 +131,7 @@
       },
       "category": "android",
       "description": "Rendimiento flagship con carga ultrarrápida y OxygenOS fluido.",
-      "displayOrder": 7
+      "displayOrder": 8
     },
     {
       "id": "xiaomi-14-ultra",
@@ -154,7 +154,7 @@
       },
       "category": "android",
       "description": "Fotografía profesional con ópticas Leica y carga ultrarrápida de 120W.",
-      "displayOrder": 17
+      "displayOrder": 18
     },
     {
       "id": "honor-magic-6-lite",
@@ -203,7 +203,7 @@
       },
       "category": "android",
       "description": "Cámara principal de 200MP y pantalla AMOLED curva con tasa de refresco de 120Hz.",
-      "displayOrder": 3
+      "displayOrder": 5
     },
     {
       "id": "honor-x9b",
@@ -227,7 +227,7 @@
       },
       "category": "android",
       "description": "Diseño ultra-resistente con pantalla antigolpes y batería de larga duración.",
-      "displayOrder": 5
+      "displayOrder": 6
     },
     {
       "id": "xiaomi-14t-pro",
@@ -252,7 +252,7 @@
       "featured": false,
       "category": "android",
       "description": "Potencia extrema con procesador MediaTek de última generación y sistema de cámaras Leica.",
-      "displayOrder": 16
+      "displayOrder": 17
     },
     {
       "id": "redmi-note-13-pro-plus",
@@ -276,7 +276,7 @@
       },
       "category": "android",
       "description": "El mejor Redmi Note con cámara de 200MP y carga rápida de 120W.",
-      "displayOrder": 9
+      "displayOrder": 10
     },
     {
       "id": "poco-f6",
@@ -302,7 +302,7 @@
       "featured": false,
       "category": "android",
       "description": "512 Gb + 12 Gb versión global desbloqueada 6.67 pulgadas 120Hz 50Mp triple cámara (negro)",
-      "displayOrder": 8,
+      "displayOrder": 9,
       "available": true,
       "inCarousel": false,
       "newArrival": false,
@@ -328,7 +328,7 @@
       },
       "category": "audio",
       "description": "Intelligent ANC and immersive 360 Audio for Galaxy devices.",
-      "displayOrder": 12
+      "displayOrder": 13
     },
     {
       "id": "samsung-tab-s9-ultra",
@@ -352,7 +352,7 @@
       "featured": false,
       "category": "tablet",
       "description": "Massive productivity powerhouse with included S Pen.",
-      "displayOrder": 14
+      "displayOrder": 15
     },
     {
       "id": "samsung-tab-s9-plus",
@@ -378,7 +378,7 @@
       },
       "category": "tablet",
       "description": "Premium AMOLED display with S Pen for creative work.",
-      "displayOrder": 15,
+      "displayOrder": 16,
       "featured": false,
       "available": true,
       "inCarousel": false,
@@ -406,7 +406,7 @@
       },
       "category": "tablet",
       "description": "Versatile 2-in-1 laptop and tablet with full Windows experience.",
-      "displayOrder": 6
+      "displayOrder": 7
     },
     {
       "id": "product-1763495811551",
@@ -434,7 +434,7 @@
       "inCarousel": true,
       "newArrival": true,
       "onSale": true,
-      "displayOrder": 11
+      "displayOrder": 12
     },
     {
       "id": "product-1763497453029",
@@ -458,7 +458,7 @@
       "category": "android",
       "description": "\nMarca\tSamsung\nSistema operativo\tAndroid\nTamaño de la memoria RAM instalada\t4 GB\nModelo de CPU\tMediaTek Helio\nVelocidad de la CPU\t2 GHz\nCapacidad de almacenamiento de memoria\t64 GB\nTamaño de pantalla\t6,7 Pulgadas\nResolución\t720 x 1600\nVelocidad de actualización\t60 hertz\nNombre del modelo\tSamsung Galaxy A06",
       "featured": false,
-      "displayOrder": 10
+      "displayOrder": 11
     },
     {
       "id": "product-1763507289547",
@@ -479,7 +479,7 @@
       "category": "android",
       "description": "256GB, 8GB, Dual SIM | 6.7 pulgadas 120Hz AMOLED, IP67 resistente al agua, Android 15 | Modelo internacional desbloqueado de fábrica para T-Mobile, Global | Paquete",
       "featured": false,
-      "displayOrder": 18
+      "displayOrder": 19
     },
     {
       "id": "product-1763509154695",
@@ -499,8 +499,29 @@
       },
       "category": "android",
       "description": " desbloqueado (compatible con T-Mobile Mint Tello & Global) SM-A176B/DS Dual SIM / 6.7 pulgadas 50MP Triple (negro SM-A176BZKQGTO)",
-      "featured": true
+      "featured": true,
+      "displayOrder": 20
+    },
+    {
+      "id": "product-1763520592123",
+      "slug": "samsung-teléfono-celular-galaxy-z-flip7",
+      "name": "Samsung Teléfono celular Galaxy Z Flip7",
+      "brand": "Samsung",
+      "priceCents": 101999,
+      "images": [
+        "https://m.media-amazon.com/images/I/51qkL5vjM+L._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/71zgWPpqXxL._AC_SX679_.jpg",
+        "https://m.media-amazon.com/images/I/81cxg+H7kmL._AC_SX679_.jpg"
+      ],
+      "tags": [],
+      "specs": {
+        "Pantall": "6.8"
+      },
+      "category": "android",
+      "description": "teléfono inteligente AI de 512 GB, Android desbloqueado, batería de larga duración, 2025, 1 año de garantía del fabricante, sombra azul",
+      "featured": true,
+      "displayOrder": 2
     }
   ],
-  "lastUpdated": "2025-11-18T23:43:03.353Z"
+  "lastUpdated": "2025-11-19T03:11:30.562Z"
 }

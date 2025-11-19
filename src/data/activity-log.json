@@ -1,6 +1,27 @@
 {
   "entries": [
     {
+      "id": "1763521890566",
+      "timestamp": "2025-11-19T03:11:30.567Z",
+      "action": "Orden de Productos Actualizado",
+      "details": "21 productos reorganizados en la página principal",
+      "type": "product"
+    },
+    {
+      "id": "1763520660929",
+      "timestamp": "2025-11-19T02:51:00.929Z",
+      "action": "Orden de Productos Actualizado",
+      "details": "21 productos reorganizados en la página principal",
+      "type": "product"
+    },
+    {
+      "id": "1763520592128",
+      "timestamp": "2025-11-19T02:49:52.128Z",
+      "action": "Producto Agregado",
+      "details": "Samsung Teléfono celular Galaxy Z Flip7 - Samsung",
+      "type": "product"
+    },
+    {
       "id": "1763509383355",
       "timestamp": "2025-11-18T23:43:03.355Z",
       "action": "Orden de Producto Actualizado",

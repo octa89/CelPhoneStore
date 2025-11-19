@@ -5,8 +5,16 @@ import { getProducts } from "@/lib/data-manager";
 export default async function HomePage() {
   const allProducts = await getProducts();
 
+  // Sort by displayOrder first, then by name
+  const sortedProducts = allProducts.sort((a, b) => {
+    const orderA = a.displayOrder ?? 999;
+    const orderB = b.displayOrder ?? 999;
+    if (orderA !== orderB) return orderA - orderB;
+    return a.name.localeCompare(b.name);
+  });
+
   // Filter only available products for the main page
-  const items = allProducts.filter((p) => p.available !== false);
+  const items = sortedProducts.filter((p) => p.available !== false);
   const featured = items.filter((p) => p.featured);
 
   return (

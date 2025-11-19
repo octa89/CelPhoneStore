@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getProducts, addProduct } from "@/lib/data-manager";
 import type { Product } from "@/lib/types";
+import { generateSlug } from "@/lib/utils";
 
 // GET all products
 export async function GET(request: NextRequest) {
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Generate ID and slug if not provided
     const id = body.id || `product-${Date.now()}`;
-    const slug = body.slug || body.name.toLowerCase().replace(/\s+/g, "-");
+    const slug = body.slug || generateSlug(body.name);
 
     const product: Product = {
       id,
