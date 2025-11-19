@@ -4,6 +4,66 @@ All notable changes to the Tecno Express e-commerce platform.
 
 ---
 
+## [2.0.1] - 2025-01-18 - TypeScript Build Fixes
+
+### 🐛 Fixed
+
+#### TypeScript Type Inference
+- **Fixed Object.entries() type inference error in brands-dropdown component**
+  - Location: `src/components/brands-dropdown.tsx:32-34`
+  - Added explicit type annotation `const groups: BrandGroup[]`
+  - Added type assertion `products as Product[]` for proper type safety
+  - Resolved AWS Amplify build error: `Type '{ brand: string; products: unknown; }[]' is not assignable to type 'BrandGroup[]'`
+  - This error occurred because TypeScript loses type information when using `Object.entries()` on `Record<string, T>` types
+
+#### Dependencies
+- Updated `package-lock.json` with missing `@next/swc` platform-specific dependencies
+  - Added `@next/swc-darwin-arm64` v15.4.6
+  - Added `@next/swc-darwin-x64` v15.4.6
+  - Added `@next/swc-linux-arm64-gnu` v15.4.6
+  - Added `@next/swc-linux-arm64-musl` v15.4.6
+  - Added `@next/swc-linux-x64-gnu` v15.4.6
+  - Added `@next/swc-linux-x64-musl` v15.4.6
+  - Added `@next/swc-win32-arm64-msvc` v15.4.6
+  - Improves build reliability across different platforms and CI/CD environments
+
+### 📚 Documentation
+
+#### Added
+- **TypeScript Best Practices Guide** (`docs/TYPESCRIPT_BEST_PRACTICES.md`)
+  - Comprehensive guide for preventing common TypeScript errors
+  - Detailed explanation of `Object.entries()` type inference issues
+  - Type assertions vs type annotations best practices
+  - Array and object type safety patterns
+  - Strict mode compliance guidelines
+  - Common pitfalls and solutions
+  - Build verification checklist
+  - Quick reference for common patterns
+
+#### Updated
+- Enhanced CHANGELOG.md with detailed version history
+- Added migration guides and breaking changes documentation
+
+### 🔧 Build Process
+
+- ✅ Production build verified successful
+- ✅ No TypeScript errors
+- ✅ No ESLint errors
+- ✅ All routes compile correctly
+- ✅ AWS Amplify deployment ready
+
+### 📊 Impact
+
+**Before:** AWS Amplify builds failed with TypeScript error
+**After:** Clean builds with full type safety maintained
+
+**Files Changed:**
+- `src/components/brands-dropdown.tsx` (2 lines modified)
+- `package-lock.json` (107 lines added)
+- `docs/TYPESCRIPT_BEST_PRACTICES.md` (new file, 600+ lines)
+
+---
+
 ## [2.0.0] - 2025-11-18 - Honor Global Design System
 
 ### 🎨 Major Design Overhaul

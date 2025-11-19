@@ -32,8 +32,8 @@ export default function HeroCarousel() {
     async function loadCarouselData() {
       try {
         const [carouselRes, productsRes] = await Promise.all([
-          fetch("/api/admin/carousel"),
-          fetch("/api/admin/products"),
+          fetch("/api/carousel"), // Fixed: Use public API instead of admin API
+          fetch("/api/products"), // Fixed: Use public API instead of admin API
         ]);
 
         if (carouselRes.ok && productsRes.ok) {
