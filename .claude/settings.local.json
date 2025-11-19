@@ -32,7 +32,10 @@
       "Bash(git config:*)",
       "Bash(GIT_CURL_VERBOSE=1 GIT_TRACE=1 git push:*)",
       "Bash(Select-String -Pattern \"Compil|Error|warn\")",
-      "Bash(Select-Object -First 50)"
+      "Bash(Select-Object -First 50)",
+      "Bash(npm run migrate:dynamodb:*)",
+      "Bash(git reset:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

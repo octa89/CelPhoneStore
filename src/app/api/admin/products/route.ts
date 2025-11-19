@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { getProducts, addProduct } from "@/lib/data-manager";
+import { getProducts, addProduct } from "@/lib/dynamodb-service";
 import type { Product } from "@/lib/types";
 import { generateSlug } from "@/lib/utils";
 

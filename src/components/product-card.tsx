@@ -52,9 +52,9 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
         {/* Name - Clickable for Quick View */}
         <button
           onClick={onQuickView}
-          className="text-xl font-semibold text-honor-text-primary mb-2 line-clamp-2 min-h-[3.5rem] text-left hover:text-honor-primary transition-colors w-full"
+          className="text-xl font-semibold text-honor-text-primary mb-2 line-clamp-2 min-h-[3.5rem] text-left hover:text-honor-primary transition-colors w-full hover:underline"
         >
-          {p.name} 👁️
+          {p.name}
         </button>
 
         {/* Description */}

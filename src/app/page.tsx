@@ -1,6 +1,6 @@
 import HeroCarousel from "@/components/hero-carousel";
 import ProductGrid from "@/components/product-grid";
-import { getProducts } from "@/lib/data-manager";
+import { getProducts } from "@/lib/dynamodb-service";
 
 export default async function HomePage() {
   const allProducts = await getProducts();

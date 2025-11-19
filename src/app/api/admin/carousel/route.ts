@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
-
-const CAROUSEL_FILE = path.join(process.cwd(), "src/data/carousel-settings.json");
+import { getCarousel, saveCarousel } from "@/lib/dynamodb-service";
 
 export async function GET() {
   try {
-    const data = await fs.readFile(CAROUSEL_FILE, "utf-8");
-    const carouselSettings = JSON.parse(data);
-    return NextResponse.json(carouselSettings);
+    const slides = await getCarousel();
+    return NextResponse.json({ slides });
   } catch (error) {
-    console.error("Error reading carousel settings:", error);
+    console.error("Error reading carousel:", error);
     return NextResponse.json({ slides: [] }, { status: 200 });
   }
 }
@@ -18,12 +14,12 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    await fs.writeFile(CAROUSEL_FILE, JSON.stringify(body, null, 2), "utf-8");
+    await saveCarousel(body.slides);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error updating carousel settings:", error);
+    console.error("Error updating carousel:", error);
     return NextResponse.json(
-      { error: "Failed to update carousel settings" },
+      { error: "Failed to update carousel" },
       { status: 500 }
     );
   }

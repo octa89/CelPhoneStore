@@ -52,9 +52,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gradient mb-2">Editar Producto</h1>
-        <p className="text-text-muted">{product.name}</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gradient mb-2">Editar Producto</h1>
+        <p className="text-sm sm:text-base text-text-muted truncate">{product.name}</p>
       </div>
 
       <ProductForm mode="edit" product={product} />

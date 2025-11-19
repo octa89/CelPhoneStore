@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { ActivityLogEntry } from "@/lib/data-manager";
+import type { ActivityLogEntry } from "@/lib/dynamodb-service";
+import ProductQuickView from "@/components/product-quick-view";
+import type { Product } from "@/lib/types";
 
 interface Stats {
   totalProducts: number;
@@ -21,6 +23,8 @@ export default function AdminDashboard() {
   });
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     async function fetchStats() {
@@ -38,6 +42,19 @@ export default function AdminDashboard() {
     fetchStats();
   }, []);
 
+  async function handleViewProduct(productId: string) {
+    try {
+      const res = await fetch(`/api/admin/products/${productId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedProduct(data.product);
+        setShowPreview(true);
+      }
+    } catch (error) {
+      console.error("Error loading product:", error);
+    }
+  }
+
   const quickActions = [
     { label: "Agregar Producto", href: "/admin/products/new", icon: "➕", color: "from-tecno-primary to-tecno-cyan" },
     { label: "Ver Productos", href: "/admin/products", icon: "📱", color: "from-tecno-cyan to-tecno-mint" },
@@ -45,66 +62,66 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div>
+    <div className="w-full">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gradient mb-2">Panel de Administración</h1>
-        <p className="text-text-muted">Gestiona tu tienda TecnoExpress</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gradient mb-2">Panel de Administración</h1>
+        <p className="text-sm sm:text-base text-text-muted">Gestiona tu tienda TecnoExpress</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Link href="/admin/products" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl group-hover:scale-110 transition-transform">📱</span>
-            <span className="text-xs text-tecno-mint bg-tecno-mint/10 px-2 py-1 rounded-full">Total</span>
+      <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
+        <Link href="/admin/products" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">📱</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-tecno-mint bg-tecno-mint/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Total</span>
           </div>
-          <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.totalProducts}</p>
-          <p className="text-sm text-text-muted">Productos</p>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.totalProducts}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Productos</p>
         </Link>
 
-        <Link href="/admin/orders" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl group-hover:scale-110 transition-transform">🛒</span>
-            <span className="text-xs text-tecno-bolt bg-tecno-bolt/10 px-2 py-1 rounded-full">Hoy</span>
+        <Link href="/admin/orders" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">🛒</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-tecno-bolt bg-tecno-bolt/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Hoy</span>
           </div>
-          <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.totalOrders}</p>
-          <p className="text-sm text-text-muted">Pedidos</p>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.totalOrders}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Pedidos</p>
         </Link>
 
-        <Link href="/admin/orders?filter=pending" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl group-hover:scale-110 transition-transform">⏳</span>
-            <span className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded-full">Pendientes</span>
+        <Link href="/admin/orders?filter=pending" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">⏳</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-orange-400 bg-orange-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Pend.</span>
           </div>
-          <p className="text-3xl font-bold text-tecno-cyan mb-1">{stats.pendingOrders}</p>
-          <p className="text-sm text-text-muted">Por Procesar</p>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.pendingOrders}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Por Procesar</p>
         </Link>
 
-        <Link href="/admin/orders?filter=revenue" className="glass-card rounded-2xl p-6 hover:scale-105 transition-all cursor-pointer group">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-3xl group-hover:scale-110 transition-transform">💰</span>
-            <span className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded-full">Total</span>
+        <Link href="/admin/orders?filter=revenue" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">💰</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-green-400 bg-green-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Total</span>
           </div>
-          <p className="text-3xl font-bold text-tecno-cyan mb-1">${stats.revenue}</p>
-          <p className="text-sm text-text-muted">Ingresos</p>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">${stats.revenue}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Ingresos</p>
         </Link>
       </div>
 
       {/* Quick Actions */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold text-text-main mb-4">Acciones Rápidas</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-lg sm:text-xl font-bold text-text-main mb-3 sm:mb-4">Acciones Rápidas</h2>
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
           {quickActions.map((action) => (
             <Link
               key={action.href}
               href={action.href}
-              className={`glass-card rounded-2xl p-6 hover:scale-105 transition-all group hover:shadow-glow`}
+              className={`glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all group hover:shadow-glow`}
             >
-              <div className={`text-4xl mb-3 group-hover:scale-110 transition-transform`}>
+              <div className={`text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform`}>
                 {action.icon}
               </div>
-              <h3 className="font-semibold text-text-main group-hover:text-gradient transition-colors">
+              <h3 className="font-semibold text-xs sm:text-sm md:text-base text-text-main group-hover:text-gradient transition-colors">
                 {action.label}
               </h3>
             </Link>
@@ -113,18 +130,18 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="glass-card rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-text-main mb-4">Actividad Reciente</h2>
+      <div className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6">
+        <h2 className="text-lg sm:text-xl font-bold text-text-main mb-3 sm:mb-4">Actividad Reciente</h2>
         {loading ? (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-3 opacity-30">⏳</div>
-            <p className="text-text-muted">Cargando actividad...</p>
+          <div className="text-center py-8 sm:py-12">
+            <div className="text-4xl sm:text-6xl mb-3 opacity-30">⏳</div>
+            <p className="text-sm sm:text-base text-text-muted">Cargando actividad...</p>
           </div>
         ) : activityLog.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-3 opacity-30">📊</div>
-            <p className="text-text-muted mb-2">No hay actividad reciente</p>
-            <p className="text-sm text-text-muted/70">Las acciones de administración aparecerán aquí</p>
+          <div className="text-center py-8 sm:py-12">
+            <div className="text-4xl sm:text-6xl mb-3 opacity-30">📊</div>
+            <p className="text-sm sm:text-base text-text-muted mb-2">No hay actividad reciente</p>
+            <p className="text-xs sm:text-sm text-text-muted/70">Las acciones de administración aparecerán aquí</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -148,24 +165,48 @@ export default function AdminDashboard() {
               return (
                 <div
                   key={entry.id}
-                  className="flex items-start gap-4 p-4 bg-tecno-bg/40 rounded-lg border border-tecno-cyan/20 hover:border-tecno-cyan/40 transition-colors"
+                  className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-tecno-bg/40 rounded-lg border border-tecno-cyan/20 hover:border-tecno-cyan/40 transition-colors"
                 >
-                  <span className="text-2xl">{typeIcons[entry.type]}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-semibold ${typeColors[entry.type]}`}>
-                      {entry.action}
-                    </p>
-                    <p className="text-sm text-text-muted truncate">{entry.details}</p>
+                  <span className="text-xl sm:text-2xl flex-shrink-0">{typeIcons[entry.type]}</span>
+                  <div className="flex-1 min-w-0 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                      <p className={`font-semibold text-sm sm:text-base ${typeColors[entry.type]}`}>
+                        {entry.action}
+                      </p>
+                      {entry.productId && entry.action === "Producto Agregado" && (
+                        <button
+                          onClick={() => handleViewProduct(entry.productId!)}
+                          className="text-xs bg-tecno-cyan/10 text-tecno-cyan px-3 py-1.5 rounded hover:bg-tecno-cyan/20 transition-colors font-medium w-fit"
+                        >
+                          Ver Preview
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs sm:text-sm text-text-muted break-words">{entry.details}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      {entry.productBrand && (
+                        <p className="text-xs text-text-muted/70">Marca: {entry.productBrand}</p>
+                      )}
+                      <span className="text-xs text-text-muted whitespace-nowrap ml-auto">
+                        {timeAgo}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs text-text-muted whitespace-nowrap">
-                    {timeAgo}
-                  </span>
                 </div>
               );
             })}
           </div>
         )}
       </div>
+
+      {/* Product Preview Modal */}
+      <ProductQuickView
+        product={showPreview ? selectedProduct : null}
+        onClose={() => {
+          setShowPreview(false);
+          setSelectedProduct(null);
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getProducts, getActivityLog } from "@/lib/data-manager";
+import { getProducts, getActivityLog } from "@/lib/dynamodb-service";
 
 export async function GET() {
   try {

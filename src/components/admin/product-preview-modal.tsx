@@ -31,34 +31,33 @@ export default function ProductPreviewModal({ product, onClose }: ProductPreview
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 z-50 overflow-y-auto"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+      style={{ zIndex: 9999 }}
       onClick={onClose}
     >
-      <div className="min-h-screen flex items-center justify-center p-4 py-8">
-        <div
-          className="relative max-w-md w-full my-8"
-          onClick={(e) => e.stopPropagation()}
+      <div
+        className="relative max-w-md w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute -top-3 -right-3 z-10 w-10 h-10 bg-white rounded-full shadow-xl hover:bg-gray-100 transition-colors flex items-center justify-center text-xl font-bold"
+          aria-label="Cerrar"
         >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute -top-4 -right-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors flex items-center justify-center text-xl"
-            aria-label="Cerrar"
-          >
-            ✕
-          </button>
+          ✕
+        </button>
 
-          {/* Preview Title */}
-          <div className="mb-4 text-center">
-            <h3 className="text-white text-lg font-semibold bg-tecno-primary/80 backdrop-blur-sm rounded-t-xl py-3 px-4">
-              Vista Previa - Página Principal
-            </h3>
-          </div>
+        {/* Preview Title */}
+        <div className="mb-4 text-center">
+          <h3 className="text-white text-lg font-semibold bg-tecno-primary/90 backdrop-blur-sm rounded-t-xl py-3 px-4 shadow-lg">
+            Vista Previa - Producto
+          </h3>
+        </div>
 
-          {/* Product Card Preview */}
-          <div className="transform scale-100">
-            <ProductCard p={product} />
-          </div>
+        {/* Product Card Preview */}
+        <div className="transform scale-100 shadow-2xl">
+          <ProductCard p={product} />
         </div>
       </div>
     </div>

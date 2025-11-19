@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { getCategories, addCategory, deleteCategory, updateCategory } from "@/lib/dynamodb-service";
+import { getTags, addTag, deleteTag, updateTag } from "@/lib/dynamodb-service";
 
-// GET all categories
+// GET all tags
 export async function GET() {
   try {
     const session = await getSession();
@@ -10,10 +10,10 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const categories = await getCategories();
-    return NextResponse.json({ categories });
+    const tags = await getTags();
+    return NextResponse.json({ tags });
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error fetching tags:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -21,7 +21,7 @@ export async function GET() {
   }
 }
 
-// POST new category
+// POST new tag
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
@@ -29,19 +29,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { category } = await request.json();
+    const { tag } = await request.json();
 
-    if (!category) {
+    if (!tag) {
       return NextResponse.json(
-        { error: "Category name required" },
+        { error: "Tag name required" },
         { status: 400 }
       );
     }
 
-    const categories = await addCategory(category);
-    return NextResponse.json({ categories });
+    const tags = await addTag(tag);
+    return NextResponse.json({ tags });
   } catch (error) {
-    console.error("Error adding category:", error);
+    console.error("Error adding tag:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT update category
+// PUT update tag
 export async function PUT(request: NextRequest) {
   try {
     const session = await getSession();
@@ -57,19 +57,19 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { oldCategory, newCategory } = await request.json();
+    const { oldTag, newTag } = await request.json();
 
-    if (!oldCategory || !newCategory) {
+    if (!oldTag || !newTag) {
       return NextResponse.json(
-        { error: "Old and new category names required" },
+        { error: "Old and new tag names required" },
         { status: 400 }
       );
     }
 
-    const categories = await updateCategory(oldCategory, newCategory);
-    return NextResponse.json({ categories });
+    const tags = await updateTag(oldTag, newTag);
+    return NextResponse.json({ tags });
   } catch (error) {
-    console.error("Error updating category:", error);
+    console.error("Error updating tag:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -77,7 +77,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE category
+// DELETE tag
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getSession();
@@ -85,19 +85,19 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { category } = await request.json();
+    const { tag } = await request.json();
 
-    if (!category) {
+    if (!tag) {
       return NextResponse.json(
-        { error: "Category name required" },
+        { error: "Tag name required" },
         { status: 400 }
       );
     }
 
-    const categories = await deleteCategory(category);
-    return NextResponse.json({ categories });
+    const tags = await deleteTag(tag);
+    return NextResponse.json({ tags });
   } catch (error) {
-    console.error("Error deleting category:", error);
+    console.error("Error deleting tag:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

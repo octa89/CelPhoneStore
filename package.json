@@ -9,13 +9,16 @@
     "lint": "next lint",
     "amplify:sandbox": "ampx sandbox",
     "amplify:deploy": "ampx deploy",
-    "amplify:delete": "ampx delete"
+    "amplify:delete": "ampx delete",
+    "migrate:dynamodb": "node -r dotenv/config -r tsx/cjs scripts/migrate-to-dynamodb.ts dotenv_config_path=.env.local"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.18.0",
     "@aws-amplify/backend-cli": "^1.8.0",
     "@aws-amplify/ui-react": "^6.13.1",
+    "@aws-sdk/client-dynamodb": "^3.934.0",
     "@aws-sdk/client-s3": "^3.933.0",
+    "@aws-sdk/lib-dynamodb": "^3.934.0",
     "@aws-sdk/s3-request-presigner": "^3.933.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -41,10 +44,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.14",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

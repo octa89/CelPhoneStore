@@ -1,4 +1,4 @@
-import { getProducts } from "@/lib/data-manager";
+import { getProducts } from "@/lib/dynamodb-service";
 import { formatCurrency } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import AddToCartClient from "./purchase";

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { updateProduct, addActivityLog } from "@/lib/data-manager";
+import { updateProduct, addActivityLog } from "@/lib/dynamodb-service";
 
 export async function PUT(request: Request) {
   try {

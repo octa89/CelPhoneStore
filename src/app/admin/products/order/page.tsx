@@ -47,80 +47,87 @@ function SortableProduct({ product, index, onMoveToTop }: SortableProductProps) 
     <div
       ref={setNodeRef}
       style={style}
-      className={`glass-card rounded-xl p-4 flex gap-4 items-center transition-all ${
+      className={`glass-card rounded-xl p-3 sm:p-4 transition-all ${
         isDragging ? "shadow-2xl z-50 scale-105" : "hover:bg-tecno-primary/5"
       }`}
     >
-      {/* Drag Handle */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="cursor-grab active:cursor-grabbing p-2 hover:bg-tecno-cyan/20 rounded transition-colors"
-        title="Arrastra para reordenar"
-      >
-        <svg
-          className="w-6 h-6 text-tecno-cyan"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <div className="flex gap-3 sm:gap-4 items-start sm:items-center">
+        {/* Drag Handle */}
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing p-1.5 sm:p-2 hover:bg-tecno-cyan/20 rounded transition-colors flex-shrink-0"
+          title="Arrastra para reordenar"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </div>
-
-      {/* Order Number */}
-      <div className="flex flex-col gap-1 items-center">
-        <div className="w-12 h-12 bg-tecno-cyan/20 rounded-full flex items-center justify-center font-bold text-lg">
-          {index + 1}
-        </div>
-        {index > 0 && (
-          <button
-            onClick={onMoveToTop}
-            className="text-xs px-2 py-1 bg-honor-primary hover:bg-honor-primary/80 text-white rounded transition-colors"
-            title="Mover al inicio"
+          <svg
+            className="w-5 h-5 sm:w-6 sm:h-6 text-tecno-cyan"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            ⬆ Top
-          </button>
-        )}
-      </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </div>
 
-      {/* Product Image */}
-      <Image
-        src={product.images[0]}
-        alt={product.name}
-        width={80}
-        height={80}
-        className="w-20 h-20 object-cover rounded-lg"
-      />
-
-      {/* Product Info */}
-      <div className="flex-1">
-        <h3 className="font-semibold text-lg">{product.name}</h3>
-        <p className="text-sm text-tecno-cyan">{product.brand}</p>
-        <p className="text-sm text-text-muted line-clamp-1">{product.description}</p>
-      </div>
-
-      {/* Price & Badges */}
-      <div className="text-right">
-        <p className="font-bold text-tecno-cyan text-lg">
-          {formatCurrency(product.priceCents)}
-        </p>
-        <div className="flex gap-2 mt-1">
-          {product.featured && (
-            <span className="text-xs bg-tecno-cyan/10 text-tecno-cyan px-2 py-1 rounded">
-              ⭐ Destacado
-            </span>
+        {/* Order Number */}
+        <div className="flex flex-col gap-1 items-center flex-shrink-0">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-tecno-cyan/20 rounded-full flex items-center justify-center font-bold text-base sm:text-lg">
+            {index + 1}
+          </div>
+          {index > 0 && (
+            <button
+              onClick={onMoveToTop}
+              className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-honor-primary hover:bg-honor-primary/80 text-white rounded transition-colors whitespace-nowrap"
+              title="Mover al inicio"
+            >
+              ⬆ Top
+            </button>
           )}
-          {product.newArrival && (
-            <span className="text-xs bg-green-500/10 text-green-400 px-2 py-1 rounded">
-              🆕 Nuevo
-            </span>
-          )}
+        </div>
+
+        {/* Product Image */}
+        <Image
+          src={product.images[0]}
+          alt={product.name}
+          width={60}
+          height={60}
+          className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded-lg flex-shrink-0"
+        />
+
+        {/* Product Info - Flex container */}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-sm sm:text-lg line-clamp-2 sm:line-clamp-1">{product.name}</h3>
+          <p className="text-xs sm:text-sm text-tecno-cyan">{product.brand}</p>
+          <p className="text-xs sm:text-sm text-text-muted line-clamp-1 hidden sm:block">{product.description}</p>
+
+          {/* Price for mobile */}
+          <p className="font-bold text-tecno-cyan text-sm sm:hidden mt-1">
+            {formatCurrency(product.priceCents)}
+          </p>
+        </div>
+
+        {/* Price & Badges - Desktop only */}
+        <div className="text-right hidden sm:block flex-shrink-0">
+          <p className="font-bold text-tecno-cyan text-lg">
+            {formatCurrency(product.priceCents)}
+          </p>
+          <div className="flex gap-2 mt-1 justify-end">
+            {product.featured && (
+              <span className="text-xs bg-tecno-cyan/10 text-tecno-cyan px-2 py-1 rounded whitespace-nowrap">
+                ⭐ Destacado
+              </span>
+            )}
+            {product.newArrival && (
+              <span className="text-xs bg-green-500/10 text-green-400 px-2 py-1 rounded whitespace-nowrap">
+                🆕 Nuevo
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -234,47 +241,48 @@ export default function ProductOrderPage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gradient mb-2">Orden de Productos</h1>
-          <p className="text-text-muted">
-            Arrastra los productos para reorganizar su orden en la tienda
-          </p>
-        </div>
-        <div className="flex gap-3">
-          {hasChanges && (
-            <span className="text-sm text-yellow-500 flex items-center gap-2">
-              ⚠️ Cambios sin guardar
-            </span>
-          )}
-          <button
-            onClick={saveOrder}
-            disabled={saving || !hasChanges}
-            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? "Guardando..." : "💾 Guardar Orden"}
-          </button>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gradient mb-2">Orden de Productos</h1>
+            <p className="text-xs sm:text-sm text-text-muted">
+              Arrastra los productos para reorganizar su orden
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            {hasChanges && (
+              <span className="text-xs sm:text-sm text-yellow-500 flex items-center gap-2">
+                ⚠️ Cambios sin guardar
+              </span>
+            )}
+            <button
+              onClick={saveOrder}
+              disabled={saving || !hasChanges}
+              className="btn-primary text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            >
+              {saving ? "Guardando..." : "💾 Guardar Orden"}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Instructions */}
-      <div className="mb-6 glass-card rounded-xl p-4 border-l-4 border-tecno-cyan">
-        <div className="flex gap-3">
-          <div className="text-2xl">ℹ️</div>
-          <div>
-            <h3 className="font-semibold mb-1">Cómo usar:</h3>
-            <ul className="text-sm text-text-muted space-y-1">
-              <li>• <strong>Arrastra</strong> los productos usando el ícono de líneas (☰) para reordenarlos</li>
-              <li>• Usa el botón <strong>&quot;⬆ Top&quot;</strong> para mover un producto al inicio de la lista</li>
-              <li>• Haz clic en <strong>&quot;Guardar Orden&quot;</strong> cuando termines de reorganizar</li>
-              <li>• El orden que establezcas aquí se reflejará en toda la tienda</li>
+      <div className="mb-4 sm:mb-6 glass-card rounded-xl p-3 sm:p-4 border-l-4 border-tecno-cyan">
+        <div className="flex gap-2 sm:gap-3">
+          <div className="text-xl sm:text-2xl flex-shrink-0">ℹ️</div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold mb-1 text-sm sm:text-base">Cómo usar:</h3>
+            <ul className="text-xs sm:text-sm text-text-muted space-y-1">
+              <li>• <strong>Arrastra</strong> usando el ícono (☰)</li>
+              <li>• Usa <strong>&quot;⬆ Top&quot;</strong> para mover al inicio</li>
+              <li>• Haz clic en <strong>&quot;Guardar Orden&quot;</strong> al terminar</li>
             </ul>
           </div>
         </div>
       </div>
 
       {/* Products List with Drag and Drop */}
-      <div className="glass-card rounded-2xl p-6">
+      <div className="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-6">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -307,21 +315,21 @@ export default function ProductOrderPage() {
 
       {/* Save Reminder */}
       {hasChanges && (
-        <div className="fixed bottom-8 right-8 glass-card rounded-xl p-4 shadow-2xl border-2 border-yellow-500/50 animate-pulse">
-          <div className="flex gap-3 items-center">
-            <div className="text-2xl">⚠️</div>
-            <div>
-              <p className="font-semibold">Tienes cambios sin guardar</p>
-              <p className="text-sm text-text-muted">
+        <div className="fixed bottom-4 left-4 right-4 sm:bottom-8 sm:right-8 sm:left-auto sm:max-w-md glass-card rounded-xl p-3 sm:p-4 shadow-2xl border-2 border-yellow-500/50 animate-pulse z-40">
+          <div className="flex gap-2 sm:gap-3 items-center">
+            <div className="text-xl sm:text-2xl flex-shrink-0">⚠️</div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm sm:text-base">Cambios sin guardar</p>
+              <p className="text-xs sm:text-sm text-text-muted hidden sm:block">
                 No olvides guardar el nuevo orden
               </p>
             </div>
             <button
               onClick={saveOrder}
               disabled={saving}
-              className="btn-primary ml-4"
+              className="btn-primary text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap"
             >
-              {saving ? "Guardando..." : "Guardar Ahora"}
+              {saving ? "Guardando..." : "Guardar"}
             </button>
           </div>
         </div>

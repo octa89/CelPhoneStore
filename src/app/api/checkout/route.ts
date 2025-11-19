@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { getProducts } from "@/lib/data-manager";
+import { getProducts } from "@/lib/dynamodb-service";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 

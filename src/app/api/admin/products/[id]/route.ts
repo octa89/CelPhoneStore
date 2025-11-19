@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { getProductById, updateProduct, deleteProduct } from "@/lib/data-manager";
+import { getProductById, updateProduct, deleteProduct } from "@/lib/dynamodb-service";
 
 // GET single product
 export async function GET(
