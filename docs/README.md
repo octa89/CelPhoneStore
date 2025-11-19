@@ -27,10 +27,12 @@ Tecno Express is a modern e-commerce platform for smartphones, tablets, and audi
 - **Modern Stack**: Next.js 15, React 19, TypeScript 5.x
 - **Honor Design System**: Premium, minimalist UI with professional aesthetics
 - **Full E-Commerce**: Product catalog, search, cart, checkout
-- **Admin Panel**: Product management, carousel editing, order tracking
+- **Admin Panel**: Product management, carousel editing, categories, drag-and-drop ordering
 - **Type-Safe**: Strict TypeScript with comprehensive type checking
 - **Optimized**: Server-side rendering, image optimization, static generation
-- **Responsive**: Mobile-first design with full responsive support
+- **Mobile-First**: Fully responsive design optimized for iPhone (430x932) and all screen sizes
+- **Cloud Database**: AWS DynamoDB for persistent, scalable data storage
+- **Production-Ready**: JWT authentication, rate limiting, activity logging
 
 ### Tech Stack
 
@@ -39,14 +41,16 @@ Tecno Express is a modern e-commerce platform for smartphones, tablets, and audi
 | Framework | Next.js 15.4.6 (App Router) |
 | Language | TypeScript 5.x (Strict mode) |
 | UI Library | React 19.1.0 |
-| Styling | Tailwind CSS 3.4.1 |
-| Animations | Framer Motion 11.15.0 |
-| State Management | Zustand 5.0.2 |
-| Database | PostgreSQL + Prisma ORM |
-| Payment | Stripe |
-| File Upload | UploadThing |
-| Deployment | AWS Amplify |
-| Icons | Lucide React 0.462.0 |
+| Styling | Tailwind CSS 3.4.14 |
+| Animations | Framer Motion 12.23.12 |
+| Drag & Drop | @dnd-kit/core 6.3.1, @dnd-kit/sortable 10.0.0 |
+| State Management | Zustand 5.0.7 |
+| Database | AWS DynamoDB with DocumentClient |
+| Payment | Stripe (ready for integration) |
+| Storage | AWS S3 (via AWS SDK) |
+| Deployment | AWS Amplify (Standalone) |
+| Icons | Lucide React 0.554.0 |
+| Authentication | JWT (jose 6.1.2) + Rate Limiting |
 
 ---
 
@@ -56,7 +60,7 @@ Tecno Express is a modern e-commerce platform for smartphones, tablets, and audi
 
 - Node.js 20.x or higher
 - npm 10.x or higher
-- PostgreSQL 14+ (for production)
+- AWS Account (for DynamoDB)
 - Git
 
 ### Installation
@@ -82,39 +86,49 @@ npm run dev
 Create a `.env.local` file with:
 
 ```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/tecnoexpress"
+# Admin Panel Authentication
+ADMIN_USERNAME=your_admin_username
+ADMIN_PASSWORD=your_secure_password
+SESSION_SECRET=<run: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))">
 
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_SECRET_KEY="sk_test_..."
+# DynamoDB Configuration (no AWS_ prefix to avoid Amplify conflicts)
+DYNAMODB_REGION=us-east-2
+DYNAMODB_ACCESS_KEY_ID=AKIA****************
+DYNAMODB_SECRET_ACCESS_KEY=****************************************
 
-# UploadThing
-UPLOADTHING_SECRET="sk_..."
-UPLOADTHING_APP_ID="your-app-id"
+# DynamoDB Table Names
+DYNAMODB_PRODUCTS_TABLE=tecnoexpress-products
+DYNAMODB_CAROUSEL_TABLE=tecnoexpress-carousel
+DYNAMODB_ACTIVITY_LOG_TABLE=tecnoexpress-activity-log
+DYNAMODB_CATEGORIES_TABLE=tecnoexpress-categories
 
-# Admin
-ADMIN_USERNAME="admin"
-ADMIN_PASSWORD_HASH="$2a$10$..." # Use bcrypt to hash
+# Stripe (Optional - for payment integration)
+STRIPE_SECRET_KEY=sk_test_************************
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_************************
 
-# App
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
+# App Configuration
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
+
+**For detailed AWS setup, see:** [DYNAMODB_SETUP_GUIDE.md](../DYNAMODB_SETUP_GUIDE.md)
 
 ### Available Scripts
 
 ```bash
 # Development
-npm run dev          # Start dev server (http://localhost:3000)
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run lint:fix     # Fix linting errors
+npm run dev                   # Start dev server (http://localhost:3000)
+npm run build                 # Build for production
+npm run start                 # Start production server
+npm run lint                  # Run ESLint
 
-# Database
-npx prisma studio    # Open Prisma Studio
-npx prisma migrate   # Run migrations
-npx prisma generate  # Generate Prisma Client
+# DynamoDB Data Management
+npm run migrate:dynamodb      # Migrate data from JSON to DynamoDB
+                              # (Requires AWS credentials in .env.local)
+
+# AWS Amplify Deployment
+npm run amplify:sandbox       # Test in Amplify sandbox
+npm run amplify:deploy        # Deploy to AWS Amplify
+npm run amplify:delete        # Delete Amplify resources
 ```
 
 ---
@@ -126,37 +140,52 @@ npx prisma generate  # Generate Prisma Client
 ```
 iphone-electro-store/
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── (main)/            # Main app routes
-│   │   │   ├── page.tsx       # Homepage
-│   │   │   ├── product/       # Product pages
-│   │   │   └── search/        # Search page
-│   │   ├── admin/             # Admin panel routes
-│   │   ├── api/               # API routes
-│   │   └── layout.tsx         # Root layout
-│   ├── components/            # React components
-│   │   ├── navbar.tsx
-│   │   ├── product-card.tsx
-│   │   ├── brands-dropdown.tsx
-│   │   └── ...
-│   ├── lib/                   # Utility functions
-│   │   ├── types.ts           # TypeScript types
-│   │   ├── products.ts        # Product utilities
-│   │   ├── db.ts              # Database connection
-│   │   └── utils.ts           # Helper functions
-│   └── store/                 # Zustand state
-│       └── cart-store.ts
-├── prisma/                    # Database schema
-│   └── schema.prisma
-├── public/                    # Static assets
-├── docs/                      # Documentation
-│   ├── README.md
+│   ├── app/                       # Next.js App Router
+│   │   ├── (main)/               # Public storefront routes
+│   │   │   ├── page.tsx          # Homepage
+│   │   │   ├── product/          # Product detail pages
+│   │   │   └── search/           # Search results page
+│   │   ├── admin/                # Admin panel (8 pages, fully mobile-responsive)
+│   │   │   ├── page.tsx          # Dashboard
+│   │   │   ├── login/            # JWT authentication with rate limiting
+│   │   │   ├── products/         # Product CRUD + drag-and-drop ordering
+│   │   │   ├── carousel/         # Hero carousel management
+│   │   │   └── categories/       # Category management
+│   │   ├── api/                  # API routes
+│   │   │   ├── admin/            # Admin API endpoints (protected)
+│   │   │   └── products/         # Public product API
+│   │   └── layout.tsx            # Root layout
+│   ├── components/               # React components
+│   │   ├── navbar.tsx            # Sticky nav with backdrop blur
+│   │   ├── product-card.tsx      # Honor design card with hover effects
+│   │   ├── hero-carousel.tsx     # Auto-advancing carousel
+│   │   └── contact-footer.tsx    # Multi-column footer with form
+│   ├── lib/                      # Core utilities
+│   │   ├── types.ts              # TypeScript type definitions
+│   │   ├── dynamodb.ts           # DynamoDB client configuration
+│   │   ├── dynamodb-service.ts   # DynamoDB CRUD operations
+│   │   ├── auth.ts               # JWT authentication
+│   │   ├── rate-limit.ts         # Rate limiting for login
+│   │   └── utils.ts              # Helper functions
+│   ├── store/                    # Zustand state management
+│   │   └── cart-store.ts         # Shopping cart state
+│   └── data/                     # Static data (for reference)
+│       ├── products.json         # Legacy product data
+│       └── categories.json       # Category definitions
+├── scripts/                      # Utility scripts
+│   └── migrate-to-dynamodb.ts    # DynamoDB migration script
+├── public/                       # Static assets
+├── docs/                         # Comprehensive documentation
+│   ├── README.md                 # Main project documentation
+│   ├── INDEX.md                  # Documentation index
 │   ├── TYPESCRIPT_BEST_PRACTICES.md
 │   └── TROUBLESHOOTING.md
-├── .env.local                 # Environment variables
-├── next.config.ts             # Next.js configuration
-├── tailwind.config.ts         # Tailwind configuration
-├── tsconfig.json              # TypeScript configuration
+├── amplify/                      # AWS Amplify backend config
+├── .env.local                    # Environment variables (not in git)
+├── amplify.yml                   # Amplify build configuration
+├── next.config.ts                # Next.js config (standalone output)
+├── tailwind.config.ts            # Tailwind + Honor design tokens
+├── tsconfig.json                 # TypeScript strict mode
 └── package.json
 ```
 
@@ -169,12 +198,40 @@ Next.js App Router (src/app)
     ↓
 Server Components (RSC) ← API Routes (src/app/api)
     ↓                           ↓
-Client Components          Prisma Client
+Client Components          DynamoDB Service Layer
     ↓                           ↓
-Zustand Store              PostgreSQL
-    ↓
-UI Components
+Zustand Store          AWS DynamoDB DocumentClient
+    ↓                           ↓
+UI Components              DynamoDB Tables
+                               ├── products
+                               ├── carousel
+                               ├── categories
+                               └── activity-log
 ```
+
+### DynamoDB Architecture
+
+**Why DynamoDB?**
+- **Persistent Storage**: Data survives AWS Amplify deployments (JSON files didn't)
+- **Scalability**: Auto-scales with traffic, no server management
+- **Performance**: Single-digit millisecond latency
+- **Cost-Effective**: Free tier covers ~100 products, < $1/month for typical usage
+- **Serverless**: Perfect for Next.js standalone deployment on Amplify
+
+**Tables Structure:**
+
+| Table | Partition Key | Sort Key | Purpose |
+|-------|--------------|----------|---------|
+| `tecnoexpress-products` | `id` (String) | - | Product catalog with full details |
+| `tecnoexpress-carousel` | `id` (String) | - | Hero carousel slides |
+| `tecnoexpress-categories` | `id` (String) | - | Product categories |
+| `tecnoexpress-activity-log` | `id` (String) | `timestamp` (String) | Admin activity tracking |
+
+**Service Layer (`src/lib/dynamodb-service.ts`):**
+- Centralized CRUD operations
+- Type-safe queries with TypeScript
+- Error handling and logging
+- Automatic data marshalling/unmarshalling
 
 ### Key Concepts
 
@@ -337,6 +394,178 @@ export function MyComponent() {
   );
 }
 ```
+
+### Working with DynamoDB
+
+**Fetching Data:**
+```typescript
+// src/app/admin/products/page.tsx
+import { getAllProducts } from "@/lib/dynamodb-service";
+
+export default async function ProductsPage() {
+  const products = await getAllProducts();
+
+  return (
+    <div>
+      {products.map(product => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+}
+```
+
+**Creating/Updating Data:**
+```typescript
+// src/app/api/admin/products/route.ts
+import { createProduct, updateProduct } from "@/lib/dynamodb-service";
+
+export async function POST(request: Request) {
+  const data = await request.json();
+  const product = await createProduct(data);
+  return Response.json({ product });
+}
+
+export async function PUT(request: Request) {
+  const data = await request.json();
+  const product = await updateProduct(data.id, data);
+  return Response.json({ product });
+}
+```
+
+**Migration from JSON:**
+```bash
+# One-time migration to move data from JSON files to DynamoDB
+npm run migrate:dynamodb
+
+# This will:
+# 1. Read products.json, categories.json, etc.
+# 2. Upload all data to DynamoDB tables
+# 3. Verify migration success
+# 4. Log summary of migrated items
+```
+
+---
+
+## Mobile Responsiveness
+
+### iPhone Optimization (430x932)
+
+All admin pages are fully responsive and optimized for iPhone screens:
+
+**Responsive Breakpoints:**
+```typescript
+// tailwind.config.ts
+screens: {
+  'sm': '640px',   // Mobile landscape / Small tablets
+  'md': '768px',   // Tablets
+  'lg': '1024px',  // Laptops
+  'xl': '1280px',  // Desktops
+}
+```
+
+**Mobile-First Design Patterns:**
+
+#### 1. **Adaptive Layouts**
+```tsx
+// Desktop: Side-by-side | Mobile: Stacked
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {/* Content automatically stacks on mobile */}
+</div>
+```
+
+#### 2. **Responsive Typography**
+```tsx
+// Scales from mobile to desktop
+<h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+  {/* 30px → 36px → 48px */}
+</h1>
+```
+
+#### 3. **Touch-Friendly Targets**
+```tsx
+// Minimum 44px tap targets on mobile
+<button className="min-h-[44px] px-6 py-3 text-base">
+  Touch-Friendly Button
+</button>
+```
+
+#### 4. **Responsive Tables**
+```tsx
+// Admin panels use horizontal scroll on mobile
+<div className="overflow-x-auto">
+  <table className="min-w-full">
+    {/* Table content */}
+  </table>
+</div>
+```
+
+#### 5. **Mobile Navigation**
+```tsx
+// Hamburger menu on mobile, full nav on desktop
+<nav className="hidden md:flex md:space-x-6">
+  {/* Desktop links */}
+</nav>
+<button className="md:hidden" aria-label="Menu">
+  {/* Mobile menu toggle */}
+</button>
+```
+
+### Admin Panel Mobile Features
+
+**Products Management (`/admin/products`):**
+- ✅ Responsive product cards (1 column mobile → 3 columns desktop)
+- ✅ Touch-friendly edit/delete buttons
+- ✅ Mobile-optimized forms with proper input sizes
+- ✅ Image previews scale appropriately
+
+**Drag-and-Drop Ordering (`/admin/products/order`):**
+- ✅ Touch-enabled drag gestures (@dnd-kit/core)
+- ✅ Visual feedback for dragging on mobile
+- ✅ Snap-to-grid positioning
+- ✅ Single-column layout on mobile for easy dragging
+
+**Carousel Management (`/admin/carousel`):**
+- ✅ Mobile-friendly carousel preview
+- ✅ Stacked form fields on small screens
+- ✅ Full-width buttons on mobile
+
+**Categories Management (`/admin/categories`):**
+- ✅ Responsive category cards
+- ✅ Touch-optimized CRUD operations
+- ✅ Mobile-friendly color pickers
+
+### Testing Responsiveness
+
+**Manual Testing:**
+```bash
+# Start dev server
+npm run dev
+
+# Test on actual device via network:
+# 1. Find your local IP: ipconfig (Windows) or ifconfig (Mac/Linux)
+# 2. Access from phone: http://YOUR_IP:3000
+# 3. Test all admin pages at 430x932 resolution
+```
+
+**Browser DevTools:**
+```
+1. Open Chrome DevTools (F12)
+2. Click device toolbar icon (Ctrl+Shift+M)
+3. Select "iPhone 14 Pro" or custom 430x932
+4. Test all interactive elements
+5. Verify touch targets are 44px minimum
+```
+
+**Responsive Design Checklist:**
+- ✅ All text is readable without zooming
+- ✅ Buttons are touch-friendly (minimum 44x44px)
+- ✅ Forms use appropriate input types (tel, email, etc.)
+- ✅ No horizontal scrolling on mobile (except tables)
+- ✅ Images scale properly and load optimized sizes
+- ✅ Navigation is accessible via hamburger menu
+- ✅ Tables are scrollable horizontally on mobile
+- ✅ Modals/dialogs fit within viewport
 
 ---
 

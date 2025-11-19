@@ -107,10 +107,10 @@ ADMIN_USERNAME=your_admin_username
 ADMIN_PASSWORD=your_secure_password
 SESSION_SECRET=your_session_secret_here
 
-# AWS DynamoDB Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=AKIA****************
-AWS_SECRET_ACCESS_KEY=****************************************
+# DynamoDB Configuration (no AWS_ prefix to avoid Amplify conflicts)
+DYNAMODB_REGION=us-east-1
+DYNAMODB_ACCESS_KEY_ID=AKIA****************
+DYNAMODB_SECRET_ACCESS_KEY=****************************************
 
 # DynamoDB Table Names (these match what you created)
 DYNAMODB_PRODUCTS_TABLE=tecnoexpress-products
@@ -120,9 +120,11 @@ DYNAMODB_CATEGORIES_TABLE=tecnoexpress-categories
 ```
 
 3. **Replace the placeholders:**
-   - `AWS_ACCESS_KEY_ID`: Use the Access Key ID from Step 2
-   - `AWS_SECRET_ACCESS_KEY`: Use the Secret Access Key from Step 2
-   - `AWS_REGION`: Use the region where you created the tables (e.g., `us-east-1`, `us-west-2`)
+   - `DYNAMODB_ACCESS_KEY_ID`: Use the Access Key ID from Step 2
+   - `DYNAMODB_SECRET_ACCESS_KEY`: Use the Secret Access Key from Step 2
+   - `DYNAMODB_REGION`: Use the region where you created the tables (e.g., `us-east-1`, `us-west-2`)
+
+   **⚠️ IMPORTANT:** We use `DYNAMODB_*` prefix instead of `AWS_*` prefix because AWS Amplify reserves environment variables starting with `AWS_` and won't allow you to set them in the Amplify Console. Using `DYNAMODB_*` avoids this conflict.
 
 4. **Generate SESSION_SECRET if you don't have one:**
    ```bash
@@ -243,14 +245,16 @@ npm run migrate:dynamodb
 | `SESSION_SECRET` | Your session secret | `abc123...` (32+ chars) |
 | `ADMIN_USERNAME` | Your admin username | `admin` |
 | `ADMIN_PASSWORD` | Your admin password | `SecurePass123!` |
-| `AWS_REGION` | Your DynamoDB region | `us-east-1` |
-| `AWS_ACCESS_KEY_ID` | Your IAM access key | `AKIA...` |
-| `AWS_SECRET_ACCESS_KEY` | Your IAM secret key | `wJalr...` |
+| `DYNAMODB_REGION` | Your DynamoDB region | `us-east-1` |
+| `DYNAMODB_ACCESS_KEY_ID` | Your IAM access key | `AKIA...` |
+| `DYNAMODB_SECRET_ACCESS_KEY` | Your IAM secret key | `wJalr...` |
 | `DYNAMODB_PRODUCTS_TABLE` | Products table name | `tecnoexpress-products` |
 | `DYNAMODB_CAROUSEL_TABLE` | Carousel table name | `tecnoexpress-carousel` |
 | `DYNAMODB_ACTIVITY_LOG_TABLE` | Activity log table name | `tecnoexpress-activity-log` |
 | `DYNAMODB_CATEGORIES_TABLE` | Categories table name | `tecnoexpress-categories` |
 | `NEXT_PUBLIC_BASE_URL` | Your production URL | `https://www.tecnoexp.com` |
+
+   **⚠️ NOTE:** We use `DYNAMODB_*` prefix (not `AWS_*`) because AWS Amplify reserves variables starting with `AWS_` and prevents you from setting them manually.
 
 3. **Click "Save"**
 
@@ -282,11 +286,11 @@ npm run migrate:dynamodb
 
 ## Troubleshooting
 
-### Issue: "AWS_REGION must be set in environment variables"
+### Issue: "DYNAMODB_REGION must be set in environment variables"
 
 **Solution:**
-- Check that `AWS_REGION` is set in `.env.local` (local)
-- Check that `AWS_REGION` is set in Amplify environment variables (production)
+- Check that `DYNAMODB_REGION` is set in `.env.local` (local)
+- Check that `DYNAMODB_REGION` is set in Amplify environment variables (production)
 
 ### Issue: "Session verification failed" or 500 errors
 
@@ -299,7 +303,7 @@ npm run migrate:dynamodb
 
 **Solution:**
 - Verify IAM user has `AmazonDynamoDBFullAccess` policy
-- Double-check `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are correct
+- Double-check `DYNAMODB_ACCESS_KEY_ID` and `DYNAMODB_SECRET_ACCESS_KEY` are correct
 - Make sure table names match exactly (case-sensitive)
 
 ### Issue: Products not showing on website
@@ -307,7 +311,7 @@ npm run migrate:dynamodb
 **Solution:**
 - Check DynamoDB Console to verify data was migrated
 - Check browser console for errors
-- Verify `AWS_REGION` matches where your tables are located
+- Verify `DYNAMODB_REGION` matches where your tables are located
 - Try running migration again: `npm run migrate:dynamodb`
 
 ### Issue: "Cannot find module '@aws-sdk/client-dynamodb'"

@@ -23,10 +23,10 @@ ADMIN_USERNAME=your_username
 ADMIN_PASSWORD=your_password
 SESSION_SECRET=<run: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))">
 
-# AWS
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=AKIA****************
-AWS_SECRET_ACCESS_KEY=****************************************
+# DynamoDB (no AWS_ prefix to avoid Amplify conflicts)
+DYNAMODB_REGION=us-east-1
+DYNAMODB_ACCESS_KEY_ID=AKIA****************
+DYNAMODB_SECRET_ACCESS_KEY=****************************************
 ```
 
 ### 4. Migrate Data (3 min)

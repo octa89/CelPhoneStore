@@ -2,24 +2,25 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 // Validate required environment variables
-if (!process.env.AWS_REGION) {
-  throw new Error("AWS_REGION must be set in environment variables");
+// Note: Using DYNAMODB_ prefix instead of AWS_ to avoid conflicts with AWS Amplify reserved variables
+if (!process.env.DYNAMODB_REGION) {
+  throw new Error("DYNAMODB_REGION must be set in environment variables");
 }
 
-if (!process.env.AWS_ACCESS_KEY_ID) {
-  throw new Error("AWS_ACCESS_KEY_ID must be set in environment variables");
+if (!process.env.DYNAMODB_ACCESS_KEY_ID) {
+  throw new Error("DYNAMODB_ACCESS_KEY_ID must be set in environment variables");
 }
 
-if (!process.env.AWS_SECRET_ACCESS_KEY) {
-  throw new Error("AWS_SECRET_ACCESS_KEY must be set in environment variables");
+if (!process.env.DYNAMODB_SECRET_ACCESS_KEY) {
+  throw new Error("DYNAMODB_SECRET_ACCESS_KEY must be set in environment variables");
 }
 
 // Create DynamoDB client
 const client = new DynamoDBClient({
-  region: process.env.AWS_REGION,
+  region: process.env.DYNAMODB_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID,
+    secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY,
   },
 });
 
