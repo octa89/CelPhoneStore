@@ -29,8 +29,8 @@ export default function BrandsDropdown() {
         }, {});
 
         // Convert to array and sort brands alphabetically
-        const groups = Object.entries(grouped)
-          .map(([brand, products]) => ({ brand, products }))
+        const groups: BrandGroup[] = Object.entries(grouped)
+          .map(([brand, products]) => ({ brand, products: products as Product[] }))
           .sort((a, b) => a.brand.localeCompare(b.brand));
 
         setBrandGroups(groups);
