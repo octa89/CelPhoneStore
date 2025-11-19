@@ -1,35 +1,55 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-// Validate required environment variables
-// Note: Using DYNAMODB_ prefix instead of AWS_ to avoid conflicts with AWS Amplify reserved variables
-if (!process.env.DYNAMODB_REGION) {
-  throw new Error("DYNAMODB_REGION must be set in environment variables");
+// Lazy initialization to avoid errors during build time
+let _dynamoDb: DynamoDBDocumentClient | null = null;
+
+function getDynamoDBClient(): DynamoDBDocumentClient {
+  if (_dynamoDb) {
+    return _dynamoDb;
+  }
+
+  // Validate required environment variables
+  // Note: Using DYNAMODB_ prefix instead of AWS_ to avoid conflicts with AWS Amplify reserved variables
+  if (!process.env.DYNAMODB_REGION) {
+    throw new Error("DYNAMODB_REGION must be set in environment variables");
+  }
+
+  if (!process.env.DYNAMODB_ACCESS_KEY_ID) {
+    throw new Error("DYNAMODB_ACCESS_KEY_ID must be set in environment variables");
+  }
+
+  if (!process.env.DYNAMODB_SECRET_ACCESS_KEY) {
+    throw new Error("DYNAMODB_SECRET_ACCESS_KEY must be set in environment variables");
+  }
+
+  // Create DynamoDB client
+  const client = new DynamoDBClient({
+    region: process.env.DYNAMODB_REGION,
+    credentials: {
+      accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID,
+      secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY,
+    },
+  });
+
+  // Create Document client for easier data manipulation
+  _dynamoDb = DynamoDBDocumentClient.from(client, {
+    marshallOptions: {
+      removeUndefinedValues: true, // Remove undefined values
+      convertEmptyValues: false,    // Don't convert empty strings to null
+    },
+  });
+
+  return _dynamoDb;
 }
 
-if (!process.env.DYNAMODB_ACCESS_KEY_ID) {
-  throw new Error("DYNAMODB_ACCESS_KEY_ID must be set in environment variables");
-}
-
-if (!process.env.DYNAMODB_SECRET_ACCESS_KEY) {
-  throw new Error("DYNAMODB_SECRET_ACCESS_KEY must be set in environment variables");
-}
-
-// Create DynamoDB client
-const client = new DynamoDBClient({
-  region: process.env.DYNAMODB_REGION,
-  credentials: {
-    accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID,
-    secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY,
-  },
-});
-
-// Create Document client for easier data manipulation
-export const dynamoDb = DynamoDBDocumentClient.from(client, {
-  marshallOptions: {
-    removeUndefinedValues: true, // Remove undefined values
-    convertEmptyValues: false,    // Don't convert empty strings to null
-  },
+// Export getter function instead of direct client
+export const dynamoDb = new Proxy({} as DynamoDBDocumentClient, {
+  get(_target, prop) {
+    const client = getDynamoDBClient();
+    const value = client[prop as keyof DynamoDBDocumentClient];
+    return typeof value === 'function' ? value.bind(client) : value;
+  }
 });
 
 // Table names from environment variables
