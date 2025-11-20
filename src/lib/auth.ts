@@ -1,16 +1,19 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
-// Validate SESSION_SECRET exists and is strong
-if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
-  throw new Error(
-    "SESSION_SECRET must be set in .env.local and be at least 32 characters long. " +
-    "Generate a strong secret: openssl rand -base64 32"
-  );
-}
-
-const SESSION_SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// Lazy validation and initialization of SESSION_SECRET
+function getSessionSecret(): Uint8Array {
+  // Validate SESSION_SECRET exists and is strong
+  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+    throw new Error(
+      "SESSION_SECRET must be set in environment variables and be at least 32 characters long. " +
+      "Generate a strong secret: node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\""
+    );
+  }
+  return new TextEncoder().encode(process.env.SESSION_SECRET);
+}
 
 export interface SessionData {
   username: string;
@@ -20,6 +23,7 @@ export interface SessionData {
 
 export async function createSession(username: string): Promise<string> {
   const expiresAt = Date.now() + SESSION_DURATION;
+  const sessionSecret = getSessionSecret();
 
   const token = await new SignJWT({
     username,
@@ -28,14 +32,15 @@ export async function createSession(username: string): Promise<string> {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
-    .sign(SESSION_SECRET);
+    .sign(sessionSecret);
 
   return token;
 }
 
 export async function verifySession(token: string): Promise<SessionData | null> {
   try {
-    const { payload } = await jwtVerify(token, SESSION_SECRET);
+    const sessionSecret = getSessionSecret();
+    const { payload } = await jwtVerify(token, sessionSecret);
 
     if (typeof payload.expiresAt === "number" && payload.expiresAt < Date.now()) {
       return null;
