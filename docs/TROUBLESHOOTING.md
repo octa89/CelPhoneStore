@@ -272,6 +272,50 @@ git checkout src/lib/types.ts
 
 ## AWS Amplify Deployment
 
+### Error: "Missing credentials" for OpenAI during Build
+
+**Symptom:**
+```
+Error: Missing credentials. Please pass an `apiKey`, or set the `OPENAI_API_KEY` environment variable.
+[Error: Failed to collect page data for /api/chat]
+```
+
+**Cause:**
+The OpenAI client was being instantiated at module load time. During Amplify's "Collecting page data" phase, all route modules are loaded, but environment variables are not available at build time.
+
+**Solution:**
+This was fixed in v2.1.0 by implementing lazy initialization:
+
+```typescript
+// ❌ WRONG - Module-level instantiation (fails at build time)
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// ✅ CORRECT - Lazy initialization (only runs at runtime)
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is not set");
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
+```
+
+**Key Principle:** Any code that requires environment variables should be lazily initialized inside request handlers, not at module load time.
+
+**Files Commonly Affected:**
+- `src/app/api/chat/route.ts` - OpenAI client
+- Any API route using external services with API keys
+
+---
+
 ### Build Fails on Amplify but Works Locally
 
 **Diagnosis Steps:**
@@ -887,5 +931,5 @@ git stash pop                  # Restore stashed changes
 
 ---
 
-**Last Updated:** 2025-01-18
-**Version:** 2.0.1
+**Last Updated:** 2025-12-09
+**Version:** 2.1.0

@@ -1,6 +1,6 @@
 # Tecno Express - E-Commerce Platform Documentation
 
-![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)
+![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-15.4.6-black.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
@@ -28,6 +28,8 @@ Tecno Express is a modern e-commerce platform for smartphones, tablets, and audi
 - **Honor Design System**: Premium, minimalist UI with professional aesthetics
 - **Full E-Commerce**: Product catalog, search, cart, checkout
 - **Admin Panel**: Product management, carousel editing, categories, drag-and-drop ordering
+- **AI Chatbot**: OpenAI-powered customer service with lead capture and analytics
+- **Email Notifications**: Automatic lead notifications with model and location extraction
 - **Type-Safe**: Strict TypeScript with comprehensive type checking
 - **Optimized**: Server-side rendering, image optimization, static generation
 - **Mobile-First**: Fully responsive design optimized for iPhone (430x932) and all screen sizes
@@ -51,6 +53,8 @@ Tecno Express is a modern e-commerce platform for smartphones, tablets, and audi
 | Deployment | AWS Amplify (Standalone) |
 | Icons | Lucide React 0.554.0 |
 | Authentication | JWT (jose 6.1.2) + Rate Limiting |
+| AI/Chatbot | OpenAI GPT-3.5/4 with Function Calling |
+| Email | Nodemailer with SMTP |
 
 ---
 

@@ -276,6 +276,22 @@ El endpoint `/api/chat` debería considerar:
 ### Error: "Invalid OpenAI API Key"
 **Solución:** Verifica que `OPENAI_API_KEY` esté correctamente configurada en `.env.local`
 
+### Error: "Missing credentials" durante el build de Amplify
+**Causa:** El cliente OpenAI se estaba inicializando a nivel de módulo, lo cual falla durante el build cuando la variable de entorno no está disponible.
+
+**Solución:** Ya implementada en v2.1.0 - El cliente OpenAI ahora usa inicialización diferida (lazy initialization):
+```typescript
+// ✅ CORRECTO - Inicialización diferida
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return openaiClient;
+}
+```
+
 ### Error: "Table does not exist"
 **Solución:** Ejecuta el script de creación de tablas:
 ```bash
@@ -294,12 +310,17 @@ npx tsx scripts/create-chat-tables.ts
 ### Error: "Rate limit exceeded"
 **Solución:** Has excedido el límite de solicitudes de OpenAI. Espera unos minutos o actualiza tu plan.
 
+### Los emails no incluyen el modelo que el cliente preguntó
+**Solución:** Ya implementada en v2.1.0 - Los emails ahora extraen modelos de los mensajes del usuario automáticamente como fallback cuando `interestedInModels` está vacío. Soporta patrones para iPhone, Samsung Galaxy, Pixel, Xiaomi, OnePlus, y Motorola.
+
 ## Próximas Mejoras
 
 Funcionalidades futuras sugeridas:
 
 - [ ] Integración con Stripe para procesar pagos directamente en el chat
-- [ ] Notificaciones por email cuando se captura un lead
+- [x] Notificaciones por email cuando se captura un lead ✅ (Implementado v2.0.0)
+- [x] Extracción automática de modelos de los mensajes ✅ (Implementado v2.1.0)
+- [x] Ubicación del cliente en notificaciones ✅ (Implementado v2.1.0)
 - [ ] Respuestas predefinidas para preguntas frecuentes (FAQs)
 - [ ] Soporte multiidioma (inglés, portugués)
 - [ ] Integración con WhatsApp Business API

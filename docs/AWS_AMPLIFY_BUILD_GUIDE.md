@@ -5,13 +5,61 @@ This document outlines best practices to prevent build errors on AWS Amplify for
 
 ## Current Issues & Solutions
 
-### Problem 1: TypeScript Errors Breaking Builds
+### Problem 1: Module-Level Client Initialization (CRITICAL)
+**Issue:** External service clients (OpenAI, etc.) initialized at module level fail during Amplify's "Collecting page data" phase because environment variables aren't available at build time.
+
+**Error Example:**
+```
+Error: Missing credentials. Please pass an `apiKey`, or set the `OPENAI_API_KEY` environment variable.
+[Error: Failed to collect page data for /api/chat]
+```
+
+**Solution Implemented (v2.1.0):**
+Use lazy initialization pattern for any client that requires environment variables:
+
+```typescript
+// ❌ WRONG - Module-level instantiation (fails at build time)
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// ✅ CORRECT - Lazy initialization (only runs at runtime)
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is not set");
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
+
+// Use in request handler
+export async function POST(request: Request) {
+  const openai = getOpenAIClient(); // Only created at runtime
+  // ...
+}
+```
+
+**Files Using This Pattern:**
+- `src/app/api/chat/route.ts` - OpenAI client
+- `src/lib/dynamodb.ts` - DynamoDB client (already lazy)
+- `src/lib/auth.ts` - Session secret (already lazy)
+
+---
+
+### Problem 2: TypeScript Errors Breaking Builds
 **Issue:** Amplify fails builds when TypeScript finds type errors, even minor ones.
 
 **Solutions Implemented:**
 1. ✅ Using `npm install` instead of `npm ci` in amplify.yml
 2. ✅ Added `output: 'standalone'` in next.config.ts for optimal serverless deployment
 3. ✅ Fixed all TypeScript errors proactively
+4. ✅ Using lazy initialization for external clients
 
 **Recommended (Optional):** Add safety net to next.config.ts:
 ```typescript
@@ -204,7 +252,16 @@ const nextConfig: NextConfig = {
 - [x] Run `npx tsc --noEmit` before commits
 - [x] Test `npm run build` locally before push
 - [x] Keep dependencies updated
+- [x] Use lazy initialization for external service clients (OpenAI, etc.)
 - [ ] (Optional) Set up pre-commit hooks
 - [ ] (Optional) Add TypeScript/ESLint ignore flags for emergency
 
-**Key Takeaway:** Prevention is better than emergency fixes. Always validate locally before pushing to avoid Amplify build failures.
+**Key Takeaways:**
+1. **Prevention is better than emergency fixes.** Always validate locally before pushing to avoid Amplify build failures.
+2. **Environment variables are NOT available at build time.** Any code that requires them must use lazy initialization patterns.
+3. **Module-level code runs during static page collection.** This is when most build errors occur.
+
+---
+
+**Last Updated:** 2025-12-09
+**Version:** 2.1.0

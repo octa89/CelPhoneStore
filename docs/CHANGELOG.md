@@ -4,6 +4,50 @@ All notable changes to the Tecno Express e-commerce platform.
 
 ---
 
+## [2.1.0] - 2025-12-09 - AI Chatbot Enhancements & Bug Fixes
+
+### 🐛 Fixed
+
+#### AWS Amplify Build Error - OpenAI Client Initialization
+- **Fixed build failure caused by OpenAI client module-level instantiation**
+  - Location: `src/app/api/chat/route.ts:91-104`
+  - Changed from direct instantiation to lazy initialization pattern
+  - The OpenAI client was being created at module load time, causing builds to fail when `OPENAI_API_KEY` wasn't available during Amplify's static page collection phase
+  - Now uses `getOpenAIClient()` function that only creates the client at runtime when the API is called
+  - This follows the same pattern used for DynamoDB client initialization
+
+### ✨ Enhanced
+
+#### Email Notifications - Model Extraction
+- **Improved email notifications to always include mentioned models**
+  - Location: `src/lib/email-templates.ts`
+  - Added model extraction from user messages as fallback when `interestedInModels` is empty
+  - Supports patterns for: iPhone, Samsung Galaxy, Pixel, Xiaomi, OnePlus, Motorola
+  - Models are now always included in email summary if mentioned anywhere in conversation
+  - Added location (city, country) to email header and summary bullets
+
+#### Cart Badge Animation
+- **Added pulsing animation to cart item count badge**
+  - Location: `src/app/globals.css` and `src/components/navbar.tsx`
+  - Red pulsing/beating animation draws attention to cart items
+  - Badge scales and glows with smooth CSS animation
+  - Fixed visibility issue by replacing Badge component with styled span
+
+### 📊 Technical Details
+
+**Files Changed:**
+- `src/app/api/chat/route.ts` - Lazy OpenAI client initialization
+- `src/lib/email-templates.ts` - Model extraction + location in emails
+- `src/app/globals.css` - Cart badge pulse animation
+- `src/components/navbar.tsx` - Updated cart badge styling
+
+**Build Impact:**
+- ✅ Amplify builds now succeed without `OPENAI_API_KEY` at build time
+- ✅ All email notifications include model information when available
+- ✅ Cart badge is more visually prominent
+
+---
+
 ## [2.0.1] - 2025-01-18 - TypeScript Build Fixes
 
 ### 🐛 Fixed
