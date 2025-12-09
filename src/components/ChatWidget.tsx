@@ -71,12 +71,23 @@ export default function ChatWidget() {
 
   // Function to end the conversation and send email notification
   const endConversation = useCallback(async (reason: 'closed' | 'timeout') => {
-    if (!conversationId || conversationEnded) return;
+    console.log(`[Chat] endConversation called - conversationId: ${conversationId}, conversationEnded: ${conversationEnded}, reason: ${reason}`);
+
+    if (!conversationId) {
+      console.log(`[Chat] Skipping end - no conversationId (user never sent a message)`);
+      return;
+    }
+
+    if (conversationEnded) {
+      console.log(`[Chat] Skipping end - conversation already ended`);
+      return;
+    }
 
     setConversationEnded(true);
 
     try {
-      await fetch("/api/chat/end", {
+      console.log(`[Chat] Calling /api/chat/end for ${conversationId}...`);
+      const response = await fetch("/api/chat/end", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +97,15 @@ export default function ChatWidget() {
           reason,
         }),
       });
-      console.log(`[Chat] Conversation ended - reason: ${reason}`);
+
+      const data = await response.json();
+      console.log(`[Chat] /api/chat/end response:`, data);
+
+      if (data.emailSent) {
+        console.log(`[Chat] ✅ Email sent successfully!`);
+      } else if (data.emailError) {
+        console.error(`[Chat] ❌ Email failed:`, data.emailError);
+      }
     } catch (error) {
       console.error("[Chat] Error ending conversation:", error);
     }
@@ -112,14 +131,20 @@ export default function ChatWidget() {
 
   // Handle chat close
   const handleClose = useCallback(() => {
+    console.log(`[Chat] handleClose called - conversationId: ${conversationId}, conversationEnded: ${conversationEnded}`);
+
     // Clear inactivity timer immediately to prevent race conditions
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current);
       inactivityTimerRef.current = null;
     }
     setIsOpen(false);
+
     if (conversationId && !conversationEnded) {
+      console.log(`[Chat] Triggering endConversation from handleClose`);
       endConversation('closed');
+    } else {
+      console.log(`[Chat] Not ending conversation - conversationId: ${conversationId}, conversationEnded: ${conversationEnded}`);
     }
   }, [conversationId, conversationEnded, endConversation]);
 

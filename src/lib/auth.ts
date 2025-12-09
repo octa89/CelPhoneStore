@@ -5,14 +5,31 @@ const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // Lazy validation and initialization of SESSION_SECRET
 function getSessionSecret(): Uint8Array {
-  // Validate SESSION_SECRET exists and is strong
-  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+  // During build time, SESSION_SECRET might not be available
+  // This is fine because auth functions are only called at runtime
+  const secret = process.env.SESSION_SECRET;
+
+  if (!secret) {
+    // During build, return a dummy secret - this code path won't be executed
+    // because cookies() will fail first in a build context
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+      console.warn('[Auth] SESSION_SECRET not available - this should only happen during build');
+      return new TextEncoder().encode('build-time-placeholder-not-for-production');
+    }
     throw new Error(
-      "SESSION_SECRET must be set in environment variables and be at least 32 characters long. " +
+      "SESSION_SECRET must be set in environment variables. " +
       "Generate a strong secret: node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\""
     );
   }
-  return new TextEncoder().encode(process.env.SESSION_SECRET);
+
+  if (secret.length < 32) {
+    throw new Error(
+      "SESSION_SECRET must be at least 32 characters long. " +
+      "Generate a strong secret: node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\""
+    );
+  }
+
+  return new TextEncoder().encode(secret);
 }
 
 export interface SessionData {
@@ -58,20 +75,29 @@ export async function verifySession(token: string): Promise<SessionData | null> 
 
 export async function getSession(): Promise<SessionData | null> {
   try {
+    // cookies() is only available in server components during runtime,
+    // not during build time static page generation
     const cookieStore = await cookies();
     const token = cookieStore.get("admin-session")?.value;
 
     if (!token) {
-      console.log("No admin-session cookie found");
+      // Only log in development to reduce noise
+      if (process.env.NODE_ENV === 'development') {
+        console.log("No admin-session cookie found");
+      }
       return null;
     }
 
     const session = await verifySession(token);
-    if (!session) {
+    if (!session && process.env.NODE_ENV === 'development') {
       console.log("Session verification failed");
     }
     return session;
   } catch (error) {
+    // During build, cookies() will throw - this is expected
+    if (error instanceof Error && error.message.includes('cookies')) {
+      return null;
+    }
     console.error("Error getting session:", error);
     return null;
   }

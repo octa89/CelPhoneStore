@@ -18,21 +18,27 @@ import {
  * - Page unload (via sendBeacon - sends as text/plain)
  */
 export async function POST(request: Request) {
+  console.log(`[Chat End] ========== REQUEST RECEIVED ==========`);
+
   try {
     // Handle both JSON and text/plain content types
     // sendBeacon sends as text/plain, but regular fetch sends as application/json
     let body: { conversationId?: string; reason?: string };
     const contentType = request.headers.get('content-type') || '';
+    console.log(`[Chat End] Content-Type: ${contentType}`);
 
     if (contentType.includes('application/json')) {
       body = await request.json();
+      console.log(`[Chat End] Parsed as JSON`);
     } else {
       // sendBeacon sends as text/plain, parse it as JSON
       const text = await request.text();
+      console.log(`[Chat End] Raw text body: ${text}`);
       try {
         body = JSON.parse(text);
+        console.log(`[Chat End] Parsed text as JSON`);
       } catch {
-        console.error("[Chat] Failed to parse request body as JSON");
+        console.error("[Chat End] Failed to parse request body as JSON");
         return NextResponse.json(
           { error: "Invalid request body" },
           { status: 400 }
@@ -41,6 +47,7 @@ export async function POST(request: Request) {
     }
 
     const { conversationId, reason } = body;
+    console.log(`[Chat End] conversationId: ${conversationId}, reason: ${reason}`);
 
     if (!conversationId) {
       return NextResponse.json(
@@ -76,6 +83,40 @@ export async function POST(request: Request) {
     conversation.updatedAt = new Date().toISOString();
 
     console.log(`[Chat] Conversation ${conversationId} ended - reason: ${reason}, status: ${newStatus}`);
+
+    // ======== CHECKLIST DE CAMPOS CAPTURADOS ========
+    // Este log ayuda a verificar qué información se recopiló antes de enviar el email
+    const customerInfo = conversation.customerInfo;
+    const metadata = conversation.metadata;
+    const capturedFields = {
+      // Información de contacto
+      name: !!customerInfo?.name,
+      phone: !!customerInfo?.phone,
+      email: !!customerInfo?.email,
+      // Interés en productos
+      interestedInBrand: !!customerInfo?.interestedInBrand,
+      interestedInModels: (customerInfo?.interestedInModels?.length || 0) > 0,
+      // Intención de compra (CRÍTICO)
+      purchaseIntent: customerInfo?.purchaseIntent || 'NOT_SET',
+      urgency: customerInfo?.urgency || 'NOT_SET',
+      // Presupuesto
+      budget: !!customerInfo?.budget,
+      priceRange: !!customerInfo?.priceRange,
+      // Información adicional
+      primaryUse: !!customerInfo?.primaryUse,
+      currentPhone: !!customerInfo?.currentPhone,
+      preferredFeatures: (customerInfo?.preferredFeatures?.length || 0) > 0,
+      // Metadata de sesión
+      deviceType: metadata?.deviceType || 'unknown',
+      browser: metadata?.browser || 'unknown',
+      os: metadata?.os || 'unknown',
+      country: metadata?.country || 'unknown',
+      city: metadata?.city || 'unknown',
+    };
+    console.log(`[Chat] ======== CHECKLIST DE CAMPOS CAPTURADOS ========`);
+    console.log(`[Chat] Conversation ID: ${conversationId}`);
+    console.log(`[Chat] Campos:`, JSON.stringify(capturedFields, null, 2));
+    console.log(`[Chat] ================================================`);
 
     // Track email sending result
     let emailSent = false;

@@ -161,17 +161,50 @@ export function generateConversationEndedEmailHtml(conversation: ChatConversatio
   // Build location string
   const location = [metadata?.city, metadata?.country].filter(Boolean).join(', ');
 
-  // Build summary bullets
+  // Build summary bullets - ALL fields from CustomerInsights
   const summaryBullets: string[] = [];
+
+  // Contact info (most important)
   if (customerInfo?.name) summaryBullets.push(`👤 ${customerInfo.name}`);
   if (customerInfo?.phone) summaryBullets.push(`📱 Tel: ${customerInfo.phone}`);
   if (customerInfo?.email) summaryBullets.push(`📧 ${customerInfo.email}`);
-  // Always show models if any were mentioned (from customerInfo OR extracted from messages)
-  if (allModels.length > 0) summaryBullets.push(`📦 Modelo: ${models}`);
+
+  // Product interest
+  if (customerInfo?.interestedInBrand) summaryBullets.push(`🏷️ Marca: ${customerInfo.interestedInBrand}`);
+  if (allModels.length > 0) summaryBullets.push(`📦 Modelo(s): ${models}`);
+
+  // Purchase intent and urgency
+  if (customerInfo?.purchaseIntent) {
+    const intentLabels: Record<string, string> = {
+      'ready_to_buy': '🟢 Listo para comprar',
+      'comparing': '🟡 Comparando opciones',
+      'researching': '🔵 Investigando',
+      'undecided': '⚪ Indeciso'
+    };
+    summaryBullets.push(`🎯 Intención: ${intentLabels[customerInfo.purchaseIntent] || customerInfo.purchaseIntent}`);
+  }
+  if (customerInfo?.urgency) {
+    const urgencyLabels: Record<string, string> = {
+      'immediate': '🔴 Inmediato (HOY)',
+      'this_week': '🟠 Esta semana',
+      'this_month': '🟡 Este mes',
+      'just_browsing': '⚪ Solo mirando'
+    };
+    summaryBullets.push(`⏰ Urgencia: ${urgencyLabels[customerInfo.urgency] || customerInfo.urgency}`);
+  }
+
+  // Budget info
   if (customerInfo?.budget) summaryBullets.push(`💰 Presupuesto: $${customerInfo.budget}`);
-  if (customerInfo?.urgency) summaryBullets.push(`⏰ Urgencia: ${customerInfo.urgency}`);
-  if (customerInfo?.primaryUse) summaryBullets.push(`🎯 Uso: ${customerInfo.primaryUse}`);
-  // Always show location if available
+  if (customerInfo?.priceRange) summaryBullets.push(`💵 Rango: ${customerInfo.priceRange}`);
+
+  // Usage info
+  if (customerInfo?.primaryUse) summaryBullets.push(`🎮 Uso principal: ${customerInfo.primaryUse}`);
+  if (customerInfo?.currentPhone) summaryBullets.push(`📱 Tel. actual: ${customerInfo.currentPhone}`);
+  if (customerInfo?.preferredFeatures && customerInfo.preferredFeatures.length > 0) {
+    summaryBullets.push(`✨ Características: ${customerInfo.preferredFeatures.join(', ')}`);
+  }
+
+  // Location (from metadata)
   if (location) summaryBullets.push(`📍 Ubicación: ${location}`);
 
   return `
@@ -247,16 +280,50 @@ export function generateManualNotificationEmailHtml(conversation: ChatConversati
   // Build location string
   const location = [metadata?.city, metadata?.country].filter(Boolean).join(', ');
 
-  // Build summary bullets
+  // Build summary bullets - ALL fields from CustomerInsights
   const summaryBullets: string[] = [];
+
+  // Contact info (most important)
   if (customerInfo?.name) summaryBullets.push(`👤 ${customerInfo.name}`);
   if (customerInfo?.phone) summaryBullets.push(`📱 Tel: ${customerInfo.phone}`);
   if (customerInfo?.email) summaryBullets.push(`📧 ${customerInfo.email}`);
-  // Always show models if any were mentioned (from customerInfo OR extracted from messages)
-  if (allModels.length > 0) summaryBullets.push(`📦 Modelo: ${models}`);
+
+  // Product interest
+  if (customerInfo?.interestedInBrand) summaryBullets.push(`🏷️ Marca: ${customerInfo.interestedInBrand}`);
+  if (allModels.length > 0) summaryBullets.push(`📦 Modelo(s): ${models}`);
+
+  // Purchase intent and urgency
+  if (customerInfo?.purchaseIntent) {
+    const intentLabels: Record<string, string> = {
+      'ready_to_buy': '🟢 Listo para comprar',
+      'comparing': '🟡 Comparando opciones',
+      'researching': '🔵 Investigando',
+      'undecided': '⚪ Indeciso'
+    };
+    summaryBullets.push(`🎯 Intención: ${intentLabels[customerInfo.purchaseIntent] || customerInfo.purchaseIntent}`);
+  }
+  if (customerInfo?.urgency) {
+    const urgencyLabels: Record<string, string> = {
+      'immediate': '🔴 Inmediato (HOY)',
+      'this_week': '🟠 Esta semana',
+      'this_month': '🟡 Este mes',
+      'just_browsing': '⚪ Solo mirando'
+    };
+    summaryBullets.push(`⏰ Urgencia: ${urgencyLabels[customerInfo.urgency] || customerInfo.urgency}`);
+  }
+
+  // Budget info
   if (customerInfo?.budget) summaryBullets.push(`💰 Presupuesto: $${customerInfo.budget}`);
-  if (customerInfo?.urgency) summaryBullets.push(`⏰ Urgencia: ${customerInfo.urgency}`);
-  // Always show location if available
+  if (customerInfo?.priceRange) summaryBullets.push(`💵 Rango: ${customerInfo.priceRange}`);
+
+  // Usage info
+  if (customerInfo?.primaryUse) summaryBullets.push(`🎮 Uso principal: ${customerInfo.primaryUse}`);
+  if (customerInfo?.currentPhone) summaryBullets.push(`📱 Tel. actual: ${customerInfo.currentPhone}`);
+  if (customerInfo?.preferredFeatures && customerInfo.preferredFeatures.length > 0) {
+    summaryBullets.push(`✨ Características: ${customerInfo.preferredFeatures.join(', ')}`);
+  }
+
+  // Location (from metadata)
   if (location) summaryBullets.push(`📍 Ubicación: ${location}`);
 
   return `
