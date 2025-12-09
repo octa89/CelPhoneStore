@@ -88,9 +88,20 @@ async function getGeoLocation(ip: string): Promise<{ country?: string; city?: st
   return {};
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to prevent build-time errors
+let openaiClient: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is not set");
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 const SYSTEM_PROMPT = `Eres un asistente virtual amigable de TecnoExpress, una tienda de celulares y dispositivos móviles.
 
@@ -544,6 +555,7 @@ export async function POST(request: NextRequest) {
     // Call OpenAI with function calling
     // Using gpt-3.5-turbo for lower costs (~10x cheaper than GPT-4)
     // Change to "gpt-4-turbo-preview" for better quality if you have credits
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages,
