@@ -730,6 +730,43 @@ export async function updateConversationStatus(
   }
 }
 
+/**
+ * Update conversation with email notification status
+ * Called after attempting to send end-of-conversation email
+ */
+export async function updateConversationEmailStatus(
+  conversationId: string,
+  emailSent: boolean,
+  emailError?: string
+): Promise<ChatConversation | null> {
+  try {
+    const conversation = await getConversation(conversationId);
+    if (!conversation) return null;
+
+    conversation.emailSent = emailSent;
+    conversation.emailSentAt = emailSent ? new Date().toISOString() : undefined;
+    conversation.emailError = emailError;
+    conversation.updatedAt = new Date().toISOString();
+
+    logDynamoOperation("UPDATE", TABLES.CHAT_CONVERSATIONS, {
+      conversationId,
+      emailSent,
+      emailError: emailError || 'none'
+    });
+
+    const command = new PutCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Item: conversation,
+    });
+
+    await dynamoDb.send(command);
+    return conversation;
+  } catch (error) {
+    console.error("Error updating conversation email status:", error);
+    return null;
+  }
+}
+
 export async function getAllConversations(limit: number = 50): Promise<ChatConversation[]> {
   try {
     logDynamoOperation("SCAN", TABLES.CHAT_CONVERSATIONS, { limit });

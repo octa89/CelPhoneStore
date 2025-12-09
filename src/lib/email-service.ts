@@ -111,6 +111,37 @@ function getSenderEmail(): string {
 }
 
 /**
+ * Send email with retry logic for transient failures
+ * Retries up to maxRetries times with exponential backoff
+ */
+async function sendMailWithRetry(
+  mailOptions: nodemailer.SendMailOptions,
+  maxRetries: number = 2
+): Promise<nodemailer.SentMessageInfo> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const info = await getTransporter().sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.warn(`[Email] Attempt ${attempt}/${maxRetries} failed:`, lastError.message);
+
+      // Don't retry on the last attempt
+      if (attempt < maxRetries) {
+        // Exponential backoff: 1s, 2s, 4s...
+        const delay = 1000 * Math.pow(2, attempt - 1);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  // If we get here, all retries failed
+  throw lastError;
+}
+
+/**
  * Send email notification when a new lead is captured
  * Triggered when save_customer_info is called
  */
@@ -140,6 +171,7 @@ export async function sendNewLeadNotification(
 /**
  * Send email notification when a conversation ends
  * Triggered when conversation status changes to 'completed' or 'abandoned'
+ * Uses retry logic to handle transient failures
  */
 export async function sendConversationEndedNotification(
   conversation: ChatConversation
@@ -148,7 +180,7 @@ export async function sendConversationEndedNotification(
     const html = generateConversationEndedEmailHtml(conversation);
     const subject = generateEmailSubject(conversation, 'conversation_ended');
 
-    const info = await getTransporter().sendMail({
+    const info = await sendMailWithRetry({
       from: `"Tecno Express" <${getSenderEmail()}>`,
       to: getNotificationEmail(),
       subject,
@@ -159,7 +191,7 @@ export async function sendConversationEndedNotification(
     return { success: true };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[Email] Failed to send conversation ended notification:', errorMessage);
+    console.error('[Email] Failed to send conversation ended notification after retries:', errorMessage);
     return { success: false, error: errorMessage };
   }
 }

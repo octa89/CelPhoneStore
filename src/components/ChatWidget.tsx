@@ -112,6 +112,11 @@ export default function ChatWidget() {
 
   // Handle chat close
   const handleClose = useCallback(() => {
+    // Clear inactivity timer immediately to prevent race conditions
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = null;
+    }
     setIsOpen(false);
     if (conversationId && !conversationEnded) {
       endConversation('closed');

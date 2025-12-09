@@ -63,6 +63,10 @@ export type ChatConversation = {
   createdAt: string;
   updatedAt: string;
   status: 'active' | 'completed' | 'abandoned';
+  // Email notification tracking
+  emailSent?: boolean;
+  emailSentAt?: string;
+  emailError?: string;
 };
 
 export type ProductInquiry = {
