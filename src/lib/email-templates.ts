@@ -6,6 +6,75 @@ import type { ChatConversation } from './types';
  * Only includes purchase details when customer wants to buy
  */
 
+// Common phone model patterns to extract from messages
+const MODEL_PATTERNS = [
+  // iPhone patterns
+  /iPhone\s*\d+(\s*(Pro|Plus|Pro\s*Max|mini))?/gi,
+  // Samsung Galaxy patterns
+  /Galaxy\s*(S|A|Z|Note)\s*\d+(\s*(Ultra|\+|Plus|FE|Fold|Flip))?/gi,
+  /Samsung\s*Galaxy\s*(S|A|Z|Note)\s*\d+(\s*(Ultra|\+|Plus|FE|Fold|Flip))?/gi,
+  // Google Pixel patterns
+  /Pixel\s*\d+(\s*(Pro|a|XL))?/gi,
+  /Google\s*Pixel\s*\d+(\s*(Pro|a|XL))?/gi,
+  // Xiaomi patterns
+  /Xiaomi\s*\d+(\s*(Pro|Ultra|T))?/gi,
+  /Redmi\s*(Note\s*)?\d+(\s*(Pro|Ultra|T))?/gi,
+  // OnePlus patterns
+  /OnePlus\s*\d+(\s*(Pro|T|R))?/gi,
+  // Motorola patterns
+  /Moto\s*(G|E|Edge)\s*\d*(\s*(Power|Plus|Pro))?/gi,
+  // Generic model references
+  /S\s*24(\s*(Ultra|\+|Plus))?/gi,
+  /A\s*(54|55|34|35|14|15)(\s*5G)?/gi,
+];
+
+/**
+ * Extract phone models mentioned in user messages
+ * Used as fallback when interestedInModels is empty
+ */
+function extractModelsFromMessages(conversation: ChatConversation): string[] {
+  const userMessages = conversation.messages
+    .filter(m => m.role === 'user')
+    .map(m => m.content)
+    .join(' ');
+
+  const foundModels = new Set<string>();
+
+  for (const pattern of MODEL_PATTERNS) {
+    const matches = userMessages.match(pattern);
+    if (matches) {
+      matches.forEach(match => {
+        // Normalize the match (capitalize properly)
+        const normalized = match.trim()
+          .replace(/\s+/g, ' ')
+          .replace(/iphone/gi, 'iPhone')
+          .replace(/galaxy/gi, 'Galaxy')
+          .replace(/pixel/gi, 'Pixel')
+          .replace(/samsung/gi, 'Samsung')
+          .replace(/xiaomi/gi, 'Xiaomi')
+          .replace(/redmi/gi, 'Redmi')
+          .replace(/oneplus/gi, 'OnePlus')
+          .replace(/moto/gi, 'Moto');
+        foundModels.add(normalized);
+      });
+    }
+  }
+
+  return Array.from(foundModels);
+}
+
+/**
+ * Get all models the customer asked about - from customerInfo OR from messages
+ */
+function getAllMentionedModels(conversation: ChatConversation): string[] {
+  const modelsFromInfo = conversation.customerInfo?.interestedInModels || [];
+  const modelsFromMessages = extractModelsFromMessages(conversation);
+
+  // Combine and deduplicate
+  const allModels = new Set([...modelsFromInfo, ...modelsFromMessages]);
+  return Array.from(allModels);
+}
+
 // Helper to format date in Spanish
 function formatDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
@@ -85,18 +154,25 @@ export function generateConversationEndedEmailHtml(conversation: ChatConversatio
   const durationMins = Math.round((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) / 60000);
   const userMessages = (messages || []).filter(m => m.role === 'user').length;
 
-  // Get models interested in
-  const models = customerInfo?.interestedInModels?.join(', ') || 'No especificado';
+  // Get ALL models mentioned - from customerInfo AND from message extraction
+  const allModels = getAllMentionedModels(conversation);
+  const models = allModels.length > 0 ? allModels.join(', ') : 'No especificado';
+
+  // Build location string
+  const location = [metadata?.city, metadata?.country].filter(Boolean).join(', ');
 
   // Build summary bullets
   const summaryBullets: string[] = [];
   if (customerInfo?.name) summaryBullets.push(`👤 ${customerInfo.name}`);
   if (customerInfo?.phone) summaryBullets.push(`📱 Tel: ${customerInfo.phone}`);
   if (customerInfo?.email) summaryBullets.push(`📧 ${customerInfo.email}`);
-  if (customerInfo?.interestedInModels?.length) summaryBullets.push(`📦 Modelo: ${models}`);
+  // Always show models if any were mentioned (from customerInfo OR extracted from messages)
+  if (allModels.length > 0) summaryBullets.push(`📦 Modelo: ${models}`);
   if (customerInfo?.budget) summaryBullets.push(`💰 Presupuesto: $${customerInfo.budget}`);
   if (customerInfo?.urgency) summaryBullets.push(`⏰ Urgencia: ${customerInfo.urgency}`);
   if (customerInfo?.primaryUse) summaryBullets.push(`🎯 Uso: ${customerInfo.primaryUse}`);
+  // Always show location if available
+  if (location) summaryBullets.push(`📍 Ubicación: ${location}`);
 
   return `
 <!DOCTYPE html>
@@ -110,7 +186,7 @@ export function generateConversationEndedEmailHtml(conversation: ChatConversatio
   <div class="container">
     <div class="header" ${showPurchaseDetails ? 'style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);"' : 'style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);"'}>
       <h1>${showPurchaseDetails ? '🚨 LLAMAR - Quiere Comprar' : 'Chat Finalizado'}</h1>
-      <p>${name} · ${models !== 'No especificado' ? models : ''}</p>
+      <p>${name}${location ? ` · ${location}` : ''}${models !== 'No especificado' ? ` · ${models}` : ''}</p>
     </div>
 
     <div class="content">
@@ -164,17 +240,24 @@ export function generateManualNotificationEmailHtml(conversation: ChatConversati
   const durationMins = Math.round((new Date(updatedAt).getTime() - new Date(createdAt).getTime()) / 60000);
   const userMessages = (messages || []).filter(m => m.role === 'user').length;
 
-  // Get models interested in
-  const models = customerInfo?.interestedInModels?.join(', ') || 'No especificado';
+  // Get ALL models mentioned - from customerInfo AND from message extraction
+  const allModels = getAllMentionedModels(conversation);
+  const models = allModels.length > 0 ? allModels.join(', ') : 'No especificado';
+
+  // Build location string
+  const location = [metadata?.city, metadata?.country].filter(Boolean).join(', ');
 
   // Build summary bullets
   const summaryBullets: string[] = [];
   if (customerInfo?.name) summaryBullets.push(`👤 ${customerInfo.name}`);
   if (customerInfo?.phone) summaryBullets.push(`📱 Tel: ${customerInfo.phone}`);
   if (customerInfo?.email) summaryBullets.push(`📧 ${customerInfo.email}`);
-  if (customerInfo?.interestedInModels?.length) summaryBullets.push(`📦 Modelo: ${models}`);
+  // Always show models if any were mentioned (from customerInfo OR extracted from messages)
+  if (allModels.length > 0) summaryBullets.push(`📦 Modelo: ${models}`);
   if (customerInfo?.budget) summaryBullets.push(`💰 Presupuesto: $${customerInfo.budget}`);
   if (customerInfo?.urgency) summaryBullets.push(`⏰ Urgencia: ${customerInfo.urgency}`);
+  // Always show location if available
+  if (location) summaryBullets.push(`📍 Ubicación: ${location}`);
 
   return `
 <!DOCTYPE html>
@@ -188,7 +271,7 @@ export function generateManualNotificationEmailHtml(conversation: ChatConversati
   <div class="container">
     <div class="header" ${showPurchaseDetails ? 'style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);"' : 'style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);"'}>
       <h1>${showPurchaseDetails ? '🚨 LLAMAR - Quiere Comprar' : 'Resumen de Chat'}</h1>
-      <p>${name} · ${models !== 'No especificado' ? models : ''}</p>
+      <p>${name}${location ? ` · ${location}` : ''}${models !== 'No especificado' ? ` · ${models}` : ''}</p>
     </div>
 
     <div class="content">
