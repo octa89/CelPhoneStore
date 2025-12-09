@@ -6,7 +6,7 @@ import {
   ScanCommand
 } from "@aws-sdk/lib-dynamodb";
 import { dynamoDb, TABLES, logDynamoOperation } from "./dynamodb";
-import type { Product } from "./types";
+import type { Product, ChatConversation, ChatMessage, ProductInquiry, PopularModelRequest, ProductReservation, SessionMetadata } from "./types";
 
 // ==================== PRODUCTS ====================
 
@@ -603,5 +603,322 @@ export async function addActivityLog(
   } catch (error) {
     console.error("Error adding activity log:", error);
     // Don't throw - activity log is non-critical
+  }
+}
+
+// ==================== CHAT CONVERSATIONS ====================
+
+export async function getConversation(conversationId: string): Promise<ChatConversation | null> {
+  try {
+    logDynamoOperation("GET", TABLES.CHAT_CONVERSATIONS, { conversationId });
+
+    const command = new GetCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Key: { id: conversationId },
+    });
+
+    const response = await dynamoDb.send(command);
+    return (response.Item as ChatConversation) || null;
+  } catch (error) {
+    console.error("Error getting conversation:", error);
+    return null;
+  }
+}
+
+export async function createConversation(sessionId: string, metadata?: SessionMetadata): Promise<ChatConversation> {
+  try {
+    const conversation: ChatConversation = {
+      id: `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      sessionId,
+      messages: [],
+      metadata,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: 'active',
+    };
+
+    logDynamoOperation("PUT", TABLES.CHAT_CONVERSATIONS, { id: conversation.id });
+
+    const command = new PutCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Item: conversation,
+    });
+
+    await dynamoDb.send(command);
+    return conversation;
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+    throw new Error("Failed to create conversation");
+  }
+}
+
+export async function addMessageToConversation(
+  conversationId: string,
+  message: ChatMessage
+): Promise<ChatConversation | null> {
+  try {
+    const conversation = await getConversation(conversationId);
+    if (!conversation) return null;
+
+    conversation.messages.push(message);
+    conversation.updatedAt = new Date().toISOString();
+
+    logDynamoOperation("UPDATE", TABLES.CHAT_CONVERSATIONS, { conversationId });
+
+    const command = new PutCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Item: conversation,
+    });
+
+    await dynamoDb.send(command);
+    return conversation;
+  } catch (error) {
+    console.error("Error adding message to conversation:", error);
+    return null;
+  }
+}
+
+export async function updateConversationCustomerInfo(
+  conversationId: string,
+  customerInfo: { name?: string; email?: string; phone?: string }
+): Promise<ChatConversation | null> {
+  try {
+    const conversation = await getConversation(conversationId);
+    if (!conversation) return null;
+
+    conversation.customerInfo = { ...conversation.customerInfo, ...customerInfo };
+    conversation.updatedAt = new Date().toISOString();
+
+    logDynamoOperation("UPDATE", TABLES.CHAT_CONVERSATIONS, { conversationId });
+
+    const command = new PutCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Item: conversation,
+    });
+
+    await dynamoDb.send(command);
+    return conversation;
+  } catch (error) {
+    console.error("Error updating customer info:", error);
+    return null;
+  }
+}
+
+export async function updateConversationStatus(
+  conversationId: string,
+  status: 'active' | 'completed' | 'abandoned'
+): Promise<ChatConversation | null> {
+  try {
+    const conversation = await getConversation(conversationId);
+    if (!conversation) return null;
+
+    conversation.status = status;
+    conversation.updatedAt = new Date().toISOString();
+
+    logDynamoOperation("UPDATE", TABLES.CHAT_CONVERSATIONS, { conversationId, status });
+
+    const command = new PutCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Item: conversation,
+    });
+
+    await dynamoDb.send(command);
+    return conversation;
+  } catch (error) {
+    console.error("Error updating conversation status:", error);
+    return null;
+  }
+}
+
+export async function getAllConversations(limit: number = 50): Promise<ChatConversation[]> {
+  try {
+    logDynamoOperation("SCAN", TABLES.CHAT_CONVERSATIONS, { limit });
+
+    const command = new ScanCommand({
+      TableName: TABLES.CHAT_CONVERSATIONS,
+      Limit: limit,
+    });
+
+    const response = await dynamoDb.send(command);
+    const conversations = (response.Items || []) as ChatConversation[];
+
+    return conversations.sort((a, b) =>
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+  } catch (error) {
+    console.error("Error getting conversations:", error);
+    return [];
+  }
+}
+
+// ==================== PRODUCT INQUIRIES ====================
+
+export async function logProductInquiry(inquiry: Omit<ProductInquiry, 'id' | 'timestamp'>): Promise<void> {
+  try {
+    const fullInquiry: ProductInquiry = {
+      ...inquiry,
+      id: `inq-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      timestamp: new Date().toISOString(),
+    };
+
+    logDynamoOperation("PUT", TABLES.PRODUCT_INQUIRIES, { id: fullInquiry.id });
+
+    const command = new PutCommand({
+      TableName: TABLES.PRODUCT_INQUIRIES,
+      Item: fullInquiry,
+    });
+
+    await dynamoDb.send(command);
+  } catch (error) {
+    console.error("Error logging product inquiry:", error);
+  }
+}
+
+export async function getProductInquiries(limit: number = 100): Promise<ProductInquiry[]> {
+  try {
+    logDynamoOperation("SCAN", TABLES.PRODUCT_INQUIRIES, { limit });
+
+    const command = new ScanCommand({
+      TableName: TABLES.PRODUCT_INQUIRIES,
+      Limit: limit,
+    });
+
+    const response = await dynamoDb.send(command);
+    const inquiries = (response.Items || []) as ProductInquiry[];
+
+    return inquiries.sort((a, b) =>
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  } catch (error) {
+    console.error("Error getting product inquiries:", error);
+    return [];
+  }
+}
+
+// ==================== POPULAR MODEL REQUESTS ====================
+
+export async function trackModelRequest(
+  modelName: string,
+  brand: string | undefined,
+  customerEmail: string | undefined,
+  conversationId?: string
+): Promise<void> {
+  try {
+    const modelId = modelName.toLowerCase().replace(/\s+/g, "-");
+
+    logDynamoOperation("GET", TABLES.POPULAR_MODELS, { modelId });
+
+    const getCommand = new GetCommand({
+      TableName: TABLES.POPULAR_MODELS,
+      Key: { id: modelId },
+    });
+
+    const existing = await dynamoDb.send(getCommand);
+    const now = new Date().toISOString();
+
+    let modelRequest: PopularModelRequest;
+
+    if (existing.Item) {
+      modelRequest = existing.Item as PopularModelRequest;
+      modelRequest.requestCount += 1;
+      modelRequest.lastRequestedAt = now;
+      if (customerEmail && !modelRequest.requestedByEmails.includes(customerEmail)) {
+        modelRequest.requestedByEmails.push(customerEmail);
+      }
+      // Track conversation relationship
+      if (!modelRequest.conversationIds) modelRequest.conversationIds = [];
+      if (conversationId && !modelRequest.conversationIds.includes(conversationId)) {
+        modelRequest.conversationIds.push(conversationId);
+      }
+    } else {
+      modelRequest = {
+        id: modelId,
+        modelName,
+        brand,
+        requestCount: 1,
+        firstRequestedAt: now,
+        lastRequestedAt: now,
+        requestedByEmails: customerEmail ? [customerEmail] : [],
+        conversationIds: conversationId ? [conversationId] : [],
+      };
+    }
+
+    logDynamoOperation("PUT", TABLES.POPULAR_MODELS, { modelId });
+
+    const putCommand = new PutCommand({
+      TableName: TABLES.POPULAR_MODELS,
+      Item: modelRequest,
+    });
+
+    await dynamoDb.send(putCommand);
+  } catch (error) {
+    console.error("Error tracking model request:", error);
+  }
+}
+
+export async function getPopularModels(limit: number = 20): Promise<PopularModelRequest[]> {
+  try {
+    logDynamoOperation("SCAN", TABLES.POPULAR_MODELS, { limit });
+
+    const command = new ScanCommand({
+      TableName: TABLES.POPULAR_MODELS,
+    });
+
+    const response = await dynamoDb.send(command);
+    const models = (response.Items || []) as PopularModelRequest[];
+
+    return models
+      .sort((a, b) => b.requestCount - a.requestCount)
+      .slice(0, limit);
+  } catch (error) {
+    console.error("Error getting popular models:", error);
+    return [];
+  }
+}
+
+// ==================== PRODUCT RESERVATIONS ====================
+
+export async function createReservation(reservation: Omit<ProductReservation, 'id' | 'requestedAt' | 'status'>): Promise<ProductReservation> {
+  try {
+    const fullReservation: ProductReservation = {
+      ...reservation,
+      id: `res-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      requestedAt: new Date().toISOString(),
+      status: 'pending',
+    };
+
+    logDynamoOperation("PUT", TABLES.RESERVATIONS, { id: fullReservation.id });
+
+    const command = new PutCommand({
+      TableName: TABLES.RESERVATIONS,
+      Item: fullReservation,
+    });
+
+    await dynamoDb.send(command);
+    return fullReservation;
+  } catch (error) {
+    console.error("Error creating reservation:", error);
+    throw new Error("Failed to create reservation");
+  }
+}
+
+export async function getReservations(limit: number = 100): Promise<ProductReservation[]> {
+  try {
+    logDynamoOperation("SCAN", TABLES.RESERVATIONS, { limit });
+
+    const command = new ScanCommand({
+      TableName: TABLES.RESERVATIONS,
+      Limit: limit,
+    });
+
+    const response = await dynamoDb.send(command);
+    const reservations = (response.Items || []) as ProductReservation[];
+
+    return reservations.sort((a, b) =>
+      new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime()
+    );
+  } catch (error) {
+    console.error("Error getting reservations:", error);
+    return [];
   }
 }

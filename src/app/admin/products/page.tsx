@@ -241,19 +241,32 @@ export default function AdminProductsPage() {
                     {product.name}
                   </button>
                   <p className="text-xs text-text-muted mt-1">{product.brand}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <span className="px-2 py-0.5 rounded-full text-xs bg-tecno-cyan/10 text-tecno-cyan">
                       {product.category}
                     </span>
                     <span className="text-sm font-semibold text-tecno-cyan">
                       {formatCurrency(product.priceCents)}
                     </span>
+                    {product.disponible === false && (
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-700 font-medium">
+                        Sin Stock
+                      </span>
+                    )}
+                    {product.available === false && (
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700 font-medium">
+                        Oculto
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Toggles Grid */}
-              <div className="grid grid-cols-5 gap-2 mb-3 py-3 border-y border-tecno-cyan/20">
+              <div className="text-[10px] text-text-muted mb-1 text-center">
+                ⭐Dest | 👁️Visible | 📦Stock | 🎠Carr | 🆕Nuevo | 💰Oferta
+              </div>
+              <div className="grid grid-cols-6 gap-2 mb-3 py-3 border-y border-tecno-cyan/20">
                 <label className="flex flex-col items-center gap-1">
                   <span className="text-xs">⭐</span>
                   <input
@@ -269,6 +282,15 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={product.available !== false}
                     onChange={(e) => toggleProductStatus(product.id, 'available', e.target.checked)}
+                    className="w-4 h-4 rounded border-tecno-cyan/30 text-tecno-cyan"
+                  />
+                </label>
+                <label className="flex flex-col items-center gap-1">
+                  <span className="text-xs">📦</span>
+                  <input
+                    type="checkbox"
+                    checked={product.disponible !== false}
+                    onChange={(e) => toggleProductStatus(product.id, 'disponible', e.target.checked)}
                     className="w-4 h-4 rounded border-tecno-cyan/30 text-tecno-cyan"
                   />
                 </label>
@@ -341,7 +363,13 @@ export default function AdminProductsPage() {
                 <th className="px-3 py-4 text-center text-sm font-semibold">
                   <div className="flex flex-col gap-1">
                     <span className="text-xs">Visible</span>
-                    <span className="text-[10px] text-text-muted font-normal">(Mostrar/Ocultar)</span>
+                    <span className="text-[10px] text-text-muted font-normal">(En Web)</span>
+                  </div>
+                </th>
+                <th className="px-3 py-4 text-center text-sm font-semibold">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-xs">Disponible</span>
+                    <span className="text-[10px] text-text-muted font-normal">(En Stock)</span>
                   </div>
                 </th>
                 <th className="px-3 py-4 text-center text-sm font-semibold">
@@ -368,7 +396,7 @@ export default function AdminProductsPage() {
             <tbody className="divide-y divide-tecno-cyan/10">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-6 py-12 text-center">
+                  <td colSpan={12} className="px-6 py-12 text-center">
                     <div className="text-4xl mb-3 opacity-30">📦</div>
                     <p className="text-text-muted">No se encontraron productos</p>
                   </td>
@@ -394,8 +422,18 @@ export default function AdminProductsPage() {
                       >
                         {product.name}
                       </button>
-                      <div className="text-sm text-text-muted line-clamp-1">
-                        {product.description}
+                      <div className="text-sm text-text-muted line-clamp-1 flex items-center gap-2 mt-1">
+                        <span className="line-clamp-1">{product.description}</span>
+                        {product.disponible === false && (
+                          <span className="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-700 font-medium whitespace-nowrap">
+                            Sin Stock
+                          </span>
+                        )}
+                        {product.available === false && (
+                          <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700 font-medium whitespace-nowrap">
+                            Oculto
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-4 text-text-muted">{product.brand}</td>
@@ -422,6 +460,16 @@ export default function AdminProductsPage() {
                         checked={product.available !== false} // Default to true if undefined
                         onChange={(e) => toggleProductStatus(product.id, 'available', e.target.checked)}
                         className="w-5 h-5 rounded border-tecno-cyan/30 text-tecno-cyan focus:ring-tecno-cyan/20 cursor-pointer"
+                        title="Mostrar/Ocultar en la página web"
+                      />
+                    </td>
+                    <td className="px-3 py-4 text-center">
+                      <input
+                        type="checkbox"
+                        checked={product.disponible !== false} // Default to true if undefined
+                        onChange={(e) => toggleProductStatus(product.id, 'disponible', e.target.checked)}
+                        className="w-5 h-5 rounded border-tecno-cyan/30 text-tecno-cyan focus:ring-tecno-cyan/20 cursor-pointer"
+                        title="Marcar si el producto está en stock"
                       />
                     </td>
                     <td className="px-3 py-4 text-center">

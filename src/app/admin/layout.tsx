@@ -24,6 +24,7 @@ export default function AdminLayout({
     { href: "/admin/products/order", label: "Orden de Productos", icon: "🔢" },
     { href: "/admin/carousel", label: "Carrusel Hero", icon: "🎠" },
     { href: "/admin/categories", label: "Categorías", icon: "📁" },
+    { href: "/admin/chat-analytics", label: "Chat & Analytics", icon: "💬" },
   ];
 
   return (

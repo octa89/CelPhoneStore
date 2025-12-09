@@ -11,6 +11,11 @@ interface Stats {
   totalOrders: number;
   pendingOrders: number;
   revenue: number;
+  totalConversations: number;
+  activeConversations: number;
+  conversationsWithLeads: number;
+  urgentLeads: number;
+  pendingReservations: number;
 }
 
 export default function AdminDashboard() {
@@ -20,6 +25,11 @@ export default function AdminDashboard() {
     totalOrders: 0,
     pendingOrders: 0,
     revenue: 0,
+    totalConversations: 0,
+    activeConversations: 0,
+    conversationsWithLeads: 0,
+    urgentLeads: 0,
+    pendingReservations: 0,
   });
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +68,7 @@ export default function AdminDashboard() {
   const quickActions = [
     { label: "Agregar Producto", href: "/admin/products/new", icon: "➕", color: "from-tecno-primary to-tecno-cyan" },
     { label: "Ver Productos", href: "/admin/products", icon: "📱", color: "from-tecno-cyan to-tecno-mint" },
+    { label: "Analíticas Chat", href: "/admin/chat-analytics", icon: "💬", color: "from-blue-500 to-purple-500" },
     { label: "Pedidos", href: "/admin/orders", icon: "🛒", color: "from-tecno-bolt to-tecno-primary" },
   ];
 
@@ -70,7 +81,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
+      <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 mb-6 sm:mb-8">
         <Link href="/admin/products" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">📱</span>
@@ -106,12 +117,48 @@ export default function AdminDashboard() {
           <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">${stats.revenue}</p>
           <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Ingresos</p>
         </Link>
+
+        <Link href="/admin/chat-analytics" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">💬</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-blue-400 bg-blue-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Chat</span>
+          </div>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.totalConversations}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Conversaciones</p>
+        </Link>
+
+        <Link href="/admin/chat-analytics" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">📧</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-purple-400 bg-purple-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Leads</span>
+          </div>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.conversationsWithLeads}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Con Info</p>
+        </Link>
+
+        <Link href="/admin/chat-analytics" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">🔥</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-red-400 bg-red-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Urgente</span>
+          </div>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.urgentLeads}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Leads Urgentes</p>
+        </Link>
+
+        <Link href="/admin/chat-analytics" className="glass-card rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 hover:scale-105 transition-all cursor-pointer group">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">📋</span>
+            <span className="text-[9px] sm:text-[10px] md:text-xs text-yellow-400 bg-yellow-400/10 px-1 sm:px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap">Reservas</span>
+          </div>
+          <p className="text-lg sm:text-xl md:text-3xl font-bold text-tecno-cyan mb-1">{stats.pendingReservations}</p>
+          <p className="text-[10px] sm:text-xs md:text-sm text-text-muted">Pendientes</p>
+        </Link>
       </div>
 
       {/* Quick Actions */}
       <div className="mb-6 sm:mb-8">
         <h2 className="text-lg sm:text-xl font-bold text-text-main mb-3 sm:mb-4">Acciones Rápidas</h2>
-        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
           {quickActions.map((action) => (
             <Link
               key={action.href}

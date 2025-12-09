@@ -60,6 +60,10 @@ export const TABLES = {
   CATEGORIES: process.env.DYNAMODB_CATEGORIES_TABLE || "tecnoexpress-categories",
   BRANDS: process.env.DYNAMODB_BRANDS_TABLE || "tecnoexpress-brands",
   TAGS: process.env.DYNAMODB_TAGS_TABLE || "tecnoexpress-tags",
+  CHAT_CONVERSATIONS: process.env.DYNAMODB_CHAT_CONVERSATIONS_TABLE || "tecnoexpress-chat-conversations",
+  PRODUCT_INQUIRIES: process.env.DYNAMODB_PRODUCT_INQUIRIES_TABLE || "tecnoexpress-product-inquiries",
+  POPULAR_MODELS: process.env.DYNAMODB_POPULAR_MODELS_TABLE || "tecnoexpress-popular-models",
+  RESERVATIONS: process.env.DYNAMODB_RESERVATIONS_TABLE || "tecnoexpress-reservations",
 } as const;
 
 // Helper to log DynamoDB operations in development

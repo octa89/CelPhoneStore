@@ -1,10 +1,25 @@
 import { NextResponse } from "next/server";
-import { getProducts, getActivityLog } from "@/lib/dynamodb-service";
+import { getProducts, getActivityLog, getAllConversations, getReservations } from "@/lib/dynamodb-service";
 
 export async function GET() {
   try {
-    const products = await getProducts();
-    const activityLog = await getActivityLog(10);
+    const [products, activityLog, conversations, reservations] = await Promise.all([
+      getProducts(),
+      getActivityLog(10),
+      getAllConversations(100),
+      getReservations(50),
+    ]);
+
+    // Calculate chat metrics
+    const totalConversations = conversations.length;
+    const activeConversations = conversations.filter((c) => c.status === "active").length;
+    const conversationsWithLeads = conversations.filter(
+      (c) => c.customerInfo?.email || c.customerInfo?.phone
+    ).length;
+    const urgentLeads = conversations.filter(
+      (c) => c.customerInfo?.urgency === "immediate"
+    ).length;
+    const pendingReservations = reservations.filter(r => r.status === 'pending').length;
 
     const stats = {
       totalProducts: products.length,
@@ -12,6 +27,12 @@ export async function GET() {
       totalOrders: 0,
       pendingOrders: 0,
       revenue: 0,
+      // Chat stats
+      totalConversations,
+      activeConversations,
+      conversationsWithLeads,
+      urgentLeads,
+      pendingReservations,
     };
 
     return NextResponse.json({

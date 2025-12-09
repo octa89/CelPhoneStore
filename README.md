@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TecnoExpress - E-commerce de Celulares
 
-## Getting Started
+Tienda en línea de celulares y dispositivos móviles con chatbot AI integrado.
 
-First, run the development server:
+## Inicio Rápido
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Características
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Catálogo de productos** con categorías y filtros
+- **Carrito de compras** con persistencia
+- **Chatbot AI** con OpenAI para atención al cliente
+- **Panel de administración** para gestión de productos
+- **Analytics de chat** con métricas y leads
+- **Notificaciones por email** al finalizar chats
 
-## Learn More
+## Documentación
 
-To learn more about Next.js, take a look at the following resources:
+Toda la documentación se encuentra en la carpeta `/docs`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Documento | Descripción |
+|-----------|-------------|
+| [INDEX.md](docs/INDEX.md) | Índice de documentación |
+| [QUICK_START.md](docs/QUICK_START.md) | Guía de inicio rápido |
+| [CHATBOT_SETUP.md](docs/CHATBOT_SETUP.md) | Configuración del chatbot |
+| [DYNAMODB_SETUP_GUIDE.md](docs/DYNAMODB_SETUP_GUIDE.md) | Configuración de DynamoDB |
+| [AWS_AMPLIFY_BUILD_GUIDE.md](docs/AWS_AMPLIFY_BUILD_GUIDE.md) | Despliegue en AWS Amplify |
+| [DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Sistema de diseño |
+| [SECURITY.md](docs/SECURITY.md) | Guía de seguridad |
+| [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Solución de problemas |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Variables de Entorno
 
-## Deploy on Vercel
+Copiar `.env.example` a `.env.local` y configurar:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+# DynamoDB
+DYNAMODB_REGION=us-east-2
+DYNAMODB_ACCESS_KEY_ID=...
+DYNAMODB_SECRET_ACCESS_KEY=...
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# OpenAI (Chatbot)
+OPENAI_API_KEY=...
+
+# Email (Gmail App Password)
+GMAIL_USER=...
+GMAIL_APP_PASSWORD=...
+ADMIN_NOTIFICATION_EMAIL=...
+```
+
+Ver [ENV_VARIABLE_UPDATE.md](docs/ENV_VARIABLE_UPDATE.md) para más detalles.
+
+## Stack Tecnológico
+
+- **Frontend**: Next.js 15, React 18, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, DynamoDB
+- **AI**: OpenAI GPT-3.5
+- **Email**: Nodemailer + Gmail
+- **Deploy**: AWS Amplify
+
+## Licencia
+
+Propiedad de GeoLink IT Services.

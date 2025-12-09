@@ -5,6 +5,7 @@ import Providers from "@/components/providers";
 import Navbar from "@/components/navbar";
 import CartDrawer from "@/components/cart-drawer";
 import ContactFooter from "@/components/contact-footer";
+import ChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           <ContactFooter />
           {/* Sidebars rendered at body level for proper fixed positioning */}
           <CartDrawer />
+          <ChatWidget />
         </Providers>
       </body>
     </html>
