@@ -20,14 +20,27 @@ export default function ContactFooter() {
     setSubmitStatus("idle");
 
     try {
-      // Simulate API call - replace with actual endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitStatus("success");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        console.error("[Contact Form] Error:", data.error);
+        setSubmitStatus("error");
+      }
 
       setTimeout(() => setSubmitStatus("idle"), 5000);
-    } catch {
+    } catch (error) {
+      console.error("[Contact Form] Error:", error);
       setSubmitStatus("error");
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } finally {

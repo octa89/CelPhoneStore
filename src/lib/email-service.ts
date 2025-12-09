@@ -224,6 +224,156 @@ export async function sendManualNotification(
 }
 
 /**
+ * Contact form data interface
+ */
+export interface ContactFormData {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
+/**
+ * Send email notification from contact form submission
+ * Uses the same Gmail credentials as chat notifications
+ */
+export async function sendContactFormEmail(
+  data: ContactFormData
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { name, email, phone, message } = data;
+    const timestamp = new Date().toLocaleString('es-NI', {
+      dateStyle: 'full',
+      timeStyle: 'short',
+    });
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Mensaje de Contacto</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <!-- Header -->
+    <tr>
+      <td style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 30px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
+          📧 Nuevo Mensaje de Contacto
+        </h1>
+        <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">
+          Formulario de contacto - Tecno Express
+        </p>
+      </td>
+    </tr>
+
+    <!-- Contact Info -->
+    <tr>
+      <td style="padding: 30px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border-radius: 12px; padding: 20px;">
+          <tr>
+            <td style="padding: 15px;">
+              <h2 style="margin: 0 0 20px 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+                👤 Información del Contacto
+              </h2>
+
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-size: 14px; width: 100px;">Nombre:</td>
+                  <td style="padding: 8px 0; color: #1e293b; font-size: 14px; font-weight: 600;">${name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Email:</td>
+                  <td style="padding: 8px 0; color: #1e293b; font-size: 14px;">
+                    <a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a>
+                  </td>
+                </tr>
+                ${phone ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Teléfono:</td>
+                  <td style="padding: 8px 0; color: #1e293b; font-size: 14px;">
+                    <a href="tel:${phone}" style="color: #2563eb; text-decoration: none;">${phone}</a>
+                  </td>
+                </tr>
+                ` : ''}
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Fecha:</td>
+                  <td style="padding: 8px 0; color: #1e293b; font-size: 14px;">${timestamp}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Message -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border-radius: 12px; padding: 20px; margin-top: 20px;">
+          <tr>
+            <td style="padding: 15px;">
+              <h2 style="margin: 0 0 15px 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+                💬 Mensaje
+              </h2>
+              <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Quick Actions -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 25px;">
+          <tr>
+            <td align="center">
+              <a href="mailto:${email}?subject=Re: Tu consulta en Tecno Express"
+                 style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+                📧 Responder por Email
+              </a>
+              ${phone ? `
+              <a href="tel:${phone}"
+                 style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; margin-left: 10px;">
+                📞 Llamar
+              </a>
+              ` : ''}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+        <p style="margin: 0; color: #64748b; font-size: 12px;">
+          Este mensaje fue enviado desde el formulario de contacto de Tecno Express
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `;
+
+    const subject = phone
+      ? `📧 Contacto: ${name} (Tel: ${phone})`
+      : `📧 Contacto: ${name}`;
+
+    const info = await sendMailWithRetry({
+      from: `"Tecno Express" <${getSenderEmail()}>`,
+      to: getNotificationEmail(),
+      replyTo: email,
+      subject,
+      html,
+    });
+
+    console.log('[Email] Contact form notification sent:', info.messageId, '- Subject:', subject);
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[Email] Failed to send contact form notification:', errorMessage);
+    return { success: false, error: errorMessage };
+  }
+}
+
+/**
  * Check if email service is properly configured
  */
 export function isEmailConfigured(): boolean {
