@@ -7,12 +7,16 @@ Welcome to the Tecno Express e-commerce platform documentation. This index will 
 | I Want To... | Read This |
 |--------------|-----------|
 | Get started with the project | [README.md](./README.md) |
-| Set up AWS DynamoDB | [DYNAMODB_SETUP_GUIDE.md](../DYNAMODB_SETUP_GUIDE.md) |
+| Set up AWS DynamoDB | [DYNAMODB_SETUP_GUIDE.md](./DYNAMODB_SETUP_GUIDE.md) |
+| Configure AWS Amplify environment | [AMPLIFY_ENV_UPDATE_CHECKLIST.md](./AMPLIFY_ENV_UPDATE_CHECKLIST.md) |
 | Optimize for mobile devices | [MOBILE_RESPONSIVENESS.md](./MOBILE_RESPONSIVENESS.md) |
 | Fix a TypeScript error | [TYPESCRIPT_BEST_PRACTICES.md](./TYPESCRIPT_BEST_PRACTICES.md) |
 | Solve a build or runtime issue | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) |
-| See what changed recently | [CHANGELOG.md](../CHANGELOG.md) |
-| Check implementation status | [ADMIN_IMPLEMENTATION_PLAN.md](../ADMIN_IMPLEMENTATION_PLAN.md) |
+| Fix AWS Amplify build errors | [AWS_AMPLIFY_BUILD_GUIDE.md](./AWS_AMPLIFY_BUILD_GUIDE.md) |
+| Set up the AI Chatbot | [CHATBOT_SETUP.md](./CHATBOT_SETUP.md) |
+| See what changed recently | [CHANGELOG.md](./CHANGELOG.md) |
+| Understand the design system | [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) |
+| Review security practices | [SECURITY.md](./SECURITY.md) |
 | Write TypeScript code (for Claude) | [.claude/typescript-guidelines.md](../.claude/typescript-guidelines.md) |
 
 ---
@@ -130,7 +134,7 @@ Welcome to the Tecno Express e-commerce platform documentation. This index will 
 
 ---
 
-### 📔 [CHANGELOG.md](../CHANGELOG.md)
+### 📔 [CHANGELOG.md](./CHANGELOG.md)
 **Version history and changes**
 
 - Detailed version history
@@ -325,6 +329,6 @@ project-root/
 
 ---
 
-**Last Updated:** 2025-01-19
-**Documentation Version:** 2.0.2
-**Project Version:** 2.0.1
+**Last Updated:** 2025-12-09
+**Documentation Version:** 2.1.0
+**Project Version:** 2.1.0

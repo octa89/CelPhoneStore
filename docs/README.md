@@ -294,11 +294,11 @@ export async function GET() {
    - Upload images
    - Click "Save"
 
-2. **Via Database** (Development)
-   ```typescript
-   // Use Prisma Studio
-   npx prisma studio
-   ```
+2. **Via AWS Console** (Development)
+   - Go to AWS Console -> DynamoDB
+   - Select the `tecnoexpress-products` table
+   - Click "Explore table items"
+   - Add or edit items directly
 
 3. **Via Code** (Initial Setup)
    ```typescript
@@ -738,20 +738,17 @@ npm run dev -- -p 3001
 #### Database Connection Issues
 
 ```bash
-# Check DATABASE_URL in .env.local
-# Test connection
-npx prisma db push
+# Check DynamoDB credentials in .env.local
+# Verify DYNAMODB_REGION, DYNAMODB_ACCESS_KEY_ID, DYNAMODB_SECRET_ACCESS_KEY
 
-# Reset database (development only!)
-npx prisma migrate reset
+# Test connection by running the app
+npm run dev
+# Check browser console and server logs for DynamoDB errors
 ```
 
 #### Type Errors After Git Pull
 
 ```bash
-# Regenerate Prisma Client
-npx prisma generate
-
 # Clear Next.js cache
 rm -rf .next
 

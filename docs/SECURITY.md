@@ -132,8 +132,9 @@ Potential security improvements for consideration:
 
 ## Reporting Security Issues
 
-If you discover a security vulnerability, please email security@yourdomain.com (DO NOT create a public issue).
+If you discover a security vulnerability, please email info@geolink.dev (DO NOT create a public issue).
 
 ## Last Updated
 
-This security documentation was last updated: January 2025
+This security documentation was last updated: December 2025
+**Version:** 2.1.0

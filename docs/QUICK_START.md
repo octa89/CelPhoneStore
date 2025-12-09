@@ -76,4 +76,5 @@ npm run lint             # Check code quality
 
 ---
 
-**Last Updated:** January 2025
+**Last Updated:** December 2025
+**Version:** 2.1.0

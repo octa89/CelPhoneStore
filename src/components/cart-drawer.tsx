@@ -91,30 +91,29 @@ export default function CartDrawer() {
     <>
       {/* backdrop */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/60 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[10000] bg-black/60 transition-opacity duration-300 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeCart}
         aria-hidden={!open}
         style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
       />
-      {/* panel */}
+      {/* panel - floating style, top-right */}
       <aside
         id="cart-drawer-panel"
-        className={`w-full sm:w-[420px] max-w-full bg-tecno-bgDark border-l border-tecno-cyan/30 shadow-glow-lg z-[70] lg:overflow-y-auto transition-transform duration-300 ease-out ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`w-[calc(100%-2rem)] sm:w-[420px] max-w-full bg-tecno-bgDark border border-tecno-cyan/30 shadow-glow-lg z-[10001] overflow-hidden rounded-2xl transition-all duration-300 ease-out ${
+          open ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
         style={{
           position: 'fixed',
-          top: 0,
-          right: 0,
-          height: '100vh',
-          bottom: 0,
+          top: '1rem',
+          right: '1rem',
+          maxHeight: '75vh',
           transform: open ? 'translateX(0)' : 'translateX(100%)'
         }}
         aria-hidden={!open}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col max-h-[75vh]">
           <div className="p-4 flex items-center justify-between border-b border-white/10 flex-shrink-0">
             <h3 className="font-semibold">Your Cart</h3>
             <button onClick={closeCart} className="opacity-70 hover:opacity-100">

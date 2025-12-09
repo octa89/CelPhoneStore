@@ -652,5 +652,5 @@ When creating new components, ensure:
 
 ---
 
-**Last Updated:** November 18, 2025
-**Version:** 2.0.0 (Honor Global Edition)
+**Last Updated:** December 9, 2025
+**Version:** 2.1.0 (Honor Global Edition)

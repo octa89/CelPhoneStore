@@ -400,4 +400,5 @@ If you encounter any issues:
 
 **Congratulations!** 🎉 Your Tecno Express admin panel is now fully functional with DynamoDB!
 
-Last Updated: January 2025
+**Last Updated:** December 2025
+**Version:** 2.1.0

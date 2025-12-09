@@ -708,6 +708,6 @@ Test with: Chrome DevTools → Lighthouse → Accessibility
 
 ---
 
-**Last Updated:** January 2025
-**Version:** 2.0.1
+**Last Updated:** December 2025
+**Version:** 2.1.0
 **Optimized For:** iPhone 14 Pro (430x932) and all modern devices

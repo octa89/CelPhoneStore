@@ -1,6 +1,10 @@
 # TecnoExpress - E-commerce de Celulares
 
-Tienda en línea de celulares y dispositivos móviles con chatbot AI integrado.
+![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.6-black.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)
+
+Tienda en linea de celulares y dispositivos moviles con chatbot AI integrado.
 
 ## Inicio Rápido
 
@@ -56,13 +60,13 @@ ADMIN_NOTIFICATION_EMAIL=...
 
 Ver [ENV_VARIABLE_UPDATE.md](docs/ENV_VARIABLE_UPDATE.md) para más detalles.
 
-## Stack Tecnológico
+## Stack Tecnologico
 
-- **Frontend**: Next.js 15, React 18, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, DynamoDB
-- **AI**: OpenAI GPT-3.5
-- **Email**: Nodemailer + Gmail
-- **Deploy**: AWS Amplify
+- **Frontend**: Next.js 15.4.6, React 19, TypeScript 5.x, Tailwind CSS
+- **Backend**: Next.js API Routes, AWS DynamoDB
+- **AI**: OpenAI GPT-4
+- **Email**: Nodemailer + Gmail SMTP
+- **Deploy**: AWS Amplify (Standalone)
 
 ## Licencia
 

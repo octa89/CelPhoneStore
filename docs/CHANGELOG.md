@@ -484,27 +484,27 @@ Complete redesign implementing the **Honor Global design system** with a premium
 
 ## Upcoming Features (Roadmap)
 
-### v2.1.0 (Planned)
+### v2.2.0 (Planned)
 - [ ] User authentication
-- [ ] Payment integration
+- [ ] Payment integration (Stripe)
 - [ ] Order tracking
 - [ ] Product reviews
 - [ ] Wishlist functionality
-- [ ] Email notifications
-
-### v2.2.0 (Planned)
 - [ ] Admin dashboard enhancements
 - [ ] Inventory management
+
+### v2.3.0 (Planned)
 - [ ] Analytics integration
 - [ ] SEO optimizations
 - [ ] Performance monitoring
+- [ ] Multi-language support (English, Portuguese)
 
 ### v3.0.0 (Future)
 - [ ] Mobile app (React Native)
-- [ ] Multi-language support
 - [ ] Advanced filtering
 - [ ] Recommendation engine
-- [ ] Live chat support
+- [ ] WhatsApp Business API integration
+- [ ] Voice chatbot (text-to-speech)
 
 ---
 
