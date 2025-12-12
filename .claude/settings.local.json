@@ -35,7 +35,11 @@
       "Bash(Select-Object -First 50)",
       "Bash(npm run migrate:dynamodb:*)",
       "Bash(git reset:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(npx tsx:*)",
+      "Bash(git mv:*)",
+      "Bash(git rm:*)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []
